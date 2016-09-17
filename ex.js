@@ -48,7 +48,8 @@ var gitGraph = new GitGraph( config );
 var master = gitGraph.branch( "master" );
 
 // Commit on HEAD Branch which is "master"
-gitGraph.commit( "Initial commit" );
+gitGraph.commit( `Initial commit
+Branch: Master` );
 
 // Add few commits on master.
 gitGraph.commit( "My second commit" ).commit( "Add awesome feature" );
@@ -62,7 +63,7 @@ master.commit( "I'm the master !" );
 
 // Advanced commit method with style and specific author (HEAD)
 var commitConfig = {
-  dotColor: "white",
+  // dotColor: "white",
   dotSize: 10,
   dotStrokeWidth: 10,
   messageHashDisplay: false,
@@ -83,20 +84,21 @@ gitGraph.commit( commitConfig );
 /***********************
  *       DETAILS       *
  ***********************/
+const blank = { message: ' '};
 
 var commitWithDetailsConfig = {
   message: "test",
   detailId: "detail" // Id of detail div (available in normal vertical mode only)
 };
-gitGraph.commit( commitWithDetailsConfig ).commit();
-dev.commit().commit(); // 2 default Commit on "dev"
+gitGraph.commit( commitWithDetailsConfig ).commit( blank);
+dev.commit(blank).commit(blank); // 2 default Commit on "dev"
 
 /***********************
  *    CUSTOMIZATION    *
  ***********************/
 
 gitGraph.author = "Fabien0102 <fabien0102@planee.fr>";
-master.commit();
+master.commit(); //inserting blank makes this blue...
 
 /***********************
  *       MERGES        *
@@ -153,3 +155,4 @@ test.commit( {
     console.log( "You just clicked my commit.", commit );
   }
 } );
+

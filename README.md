@@ -14,7 +14,7 @@ Navigate to localhost:8080
 
 ## Contributing
 
-https://github.com/mangonada/mangonada/blob/master/_CONTRIBUTING.md
+[_CONTRIBUTING.md](https://github.com/mangonada/mangonada/blob/dev/_CONTRIBUTING.md)
 
 ## Credits
 
