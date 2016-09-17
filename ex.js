@@ -49,7 +49,7 @@ var master = gitGraph.branch( "master" );
 
 // Commit on HEAD Branch which is "master"
 gitGraph.commit( `Initial commit
-Branch: Master` );
+Branch: Master` ); //Newlines don't render
 
 // Add few commits on master.
 gitGraph.commit( "My second commit" ).commit( "Add awesome feature" );
@@ -63,7 +63,7 @@ master.commit( "I'm the master !" );
 
 // Advanced commit method with style and specific author (HEAD)
 var commitConfig = {
-  // dotColor: "white",
+  dotColor: "white",
   dotSize: 10,
   dotStrokeWidth: 10,
   messageHashDisplay: false,
@@ -98,7 +98,7 @@ dev.commit(blank).commit(blank); // 2 default Commit on "dev"
  ***********************/
 
 gitGraph.author = "Fabien0102 <fabien0102@planee.fr>";
-master.commit(); //inserting blank makes this blue...
+master.commit();
 
 /***********************
  *       MERGES        *
