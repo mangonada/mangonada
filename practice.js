@@ -26,10 +26,9 @@ const gitGraph = new GitGraph( config );
 gitGraph.author = author;
 
 const master = gitGraph.branch( "master" );
-const masterConfig = makeConfig(master);
 master.commit({ message: 'First commit!!!' })
-  .commit(masterConfig)
-  .commit(masterConfig);
+  .commit()
+  .commit(blank);
 
 const dev = gitGraph.branch('dev');
 const devConfig = makeConfig(dev);
@@ -38,8 +37,8 @@ dev.commit(devConfig)
   .commit(devConfig)
   .commit(devConfig);
 
-master.commit(masterConfig)
-  .commit(masterConfig);
+master.commit(blank)
+  .commit(blank);
 dev.merge(master);
 
 dev.commit(devConfig)
