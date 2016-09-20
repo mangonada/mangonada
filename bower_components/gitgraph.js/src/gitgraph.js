@@ -102,7 +102,7 @@
     // Options
     options = (typeof options === "object") ? options : {};
     this.elementId = (typeof options.elementId === "string") ? options.elementId : "gitGraph";
-    this.author = (typeof options.author === "string") ? options.author : "";
+    this.author = (typeof options.author === "string") ? options.author : '';
     this.reverseArrow = booleanOptionOr( options.reverseArrow, false );
 
     // Template management
@@ -167,7 +167,8 @@
     this.context.textBaseline = "center";
 
     // Tooltip layer
-    this.tooltip = document.createElement( "div" );
+    this.tooltip = document.createElement( "PRE" );
+    this.tooltip.style.textAlign = "left";
     this.tooltip.className = "gitgraph-tooltip";
     this.tooltip.style.position = "fixed";
     this.tooltip.style.display = "none";
@@ -424,8 +425,8 @@
       if ( self.template.commit.tooltipHTMLFormatter !== null ) {
         self.tooltip.innerHTML = self.template.commit.tooltipHTMLFormatter( commit );
       } else {
-        self.tooltip.textContent = commit.sha1 + " - " + commit.message;
-        self.tooltip.textContent += commit.gitCommands || "";
+        self.tooltip.textContent = commit.sha1 + " - " + commit.message + '\n';
+        self.tooltip.textContent += commit.gitCommands || '';
       }
       self.tooltip.style.display = "block";
     }
@@ -435,7 +436,7 @@
         author: commit.author,
         message: commit.message,
         date: commit.date,
-        sha1: commit.sha1,
+        sha1: commit.sha1
       };
 
       _emitEvent( self.canvas, "commit:" + event, mouseEventOptions );
@@ -950,7 +951,7 @@
    * @param {Number} [options.dotStrokeWidth = this.template.commit.dot.strokeWidth] - Dot stroke width
    * @param {Number} [options.dotStrokeColor = this.template.commit.dot.strokeColor]
    *
-   * @param {String} [options.message = "He doesn't like George Michael! Boooo!"] - Commit message
+   * @param {String} [options.message = ""] - Commit message
    * @param {String} [options.messageColor = options.color] - Specific message color
    * @param {String} [options.messageFont = this.template.commit.message.font] - Font of the message
    * @param {Boolean} [options.messageDisplay = this.template.commit.message.display] - Commit message display policy
@@ -987,7 +988,7 @@
     this.tagFont = options.tagFont || this.template.commit.tag.font;
     this.displayTagBox = booleanOptionOr( options.displayTagBox, true );
     this.sha1 = options.sha1 || (Math.random( 100 )).toString( 16 ).substring( 3, 10 );
-    this.message = options.message || "";
+    this.message = options.message || '';
     this.arrowDisplay = options.arrowDisplay;
     this.messageDisplay = booleanOptionOr( options.messageDisplay, this.template.commit.message.display );
     this.messageAuthorDisplay = booleanOptionOr( options.messageAuthorDisplay, this.template.commit.message.displayAuthor );
@@ -1330,7 +1331,7 @@
       /* falls through */
     default:
       template = {
-        colors: [ "#979797", "#008fb5", "#f1c109" ],
+        colors: [ "#979797", "#008fb5", "#f1c109", '#7F007F' ],
         branch: {
           lineWidth: 10,
           spacingX: 50
