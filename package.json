@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "react-addons-test-utils": "^0.14.7",
+    "react-addons-test-utils": "^0.14.7"
   },
   "dependencies": {
     "axios": "^0.14.0",
