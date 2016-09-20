@@ -3,28 +3,20 @@
 ## General Workflow
 
 1. Fork the repo
-1. Cut a namespaced feature branch from master
-  - bug, <the bug>/...
-  - feat, <the feature>/...
-  - test, <the test>/...
-  - doc, <the doc>/...
-  - refactor, <the refactor>/...
-1. Make commits to your feature branch. Prefix each commit like so:
-  - (feat, <the feature>) Added a new feature
-  - (fix, <what you fixed>) Fixed inconsistent tests [Fixes #0]
-  - (refactor, <what was refactored>) ...
-  - (cleanup, <what you cleaned up>) ...
-  - (test, <the test>) ...
-  - (doc, <the doc>) ...
-1. When you've finished with your fix or feature, Rebase upstream changes into your branch. submit a [pull request][]
-   directly to master. Include a description of your changes.
-1. Your pull request will be reviewed by another maintainer. The point of code
+2. Cut a namespaced feature branch from master. The branch name
+   should be a short 1-or-2 word description of what you're working on.
+3. Make commits to your feature branch. **See commit message guidelines below.**
+4. When you've finished with your fix or feature, Rebase upstream
+   changes into your branch. submit a [pull request][] directly
+  to master. Include a description of your changes.
+5. Your pull request will be reviewed by another maintainer. The point of code
    reviews is to help keep the codebase clean and of high quality and, equally
    as important, to help you grow as a programmer. If your code reviewer
    requests you make a change you don't understand, ask them why.
-1. Fix any issues raised by your code reviwer, and push your fixes as a single
+6. Fix any issues raised by your code reviwer, and push your fixes as a single
    new commit.
-1. Once the pull request has been reviewed, it will be merged by another member of the team. Do not merge your own commits.
+7. Once the pull request has been reviewed, it will be merged by
+   another member of the team. Do not merge your own commits.
 
 ## Detailed Workflow
 
@@ -38,46 +30,73 @@ git remote add upstream https://github.com/makersquare/<NAME_OF_REPO>.git
 
 ### Cut a namespaced feature branch from master
 
-Your branch should follow this naming convention:
-  - bug, <the bug>/...
-  - feat, <the feature>/...
-  - test, <the test>/...
-  - doc, <the doc>/...
-  - refactor, <the refactor>/...
+Your branch name should be a short 1 or 2 word description
+of what you are working on; the commit messages will tell specifics.
 
 These commands will help you do this:
 
 ``` bash
-
 # Creates your branch and brings you there
 git checkout -b `your-branch-name`
 ```
 
 ### Make commits to your feature branch. 
 
-Prefix each commit like so
-  - (feat, <the feature>) Added a new feature
-  - (fix, <what you fixed>) Fixed inconsistent tests [Fixes #0]
-  - (refactor, <what was refactored>) ...
-  - (cleanup, <what you cleaned up>) ...
-  - (test, <the test>) ...
-  - (doc, <the doc>) ...
-
-Make changes and commits on your branch, and make sure that you
-only make changes that are relevant to this branch. If you find
-yourself making unrelated changes, make a new branch for those
-changes.
+- Make changes and commits on your branch, and make sure that you
+  only make changes that are relevant to this branch. If you find
+  yourself making unrelated changes, make a new branch for those
+  changes.
 
 #### Commit Message Guidelines
 
-- Commit messages should be written in the present tense; e.g. "Fix continuous
+The commit message should follow the following format (taken from [Chris Beams][]):
+```
+(keyword) Summarize changes in around 50 characters or less
+
+More detailed explanatory text, if necessary. Wrap it to about 72
+characters or so. In some contexts, the first line is treated as the
+subject of the commit and the rest of the text as the body. The
+blank line separating the summary from the body is critical (unless
+you omit the body entirely); various tools like `log`, `shortlog`
+and `rebase` can get confused if you run the two together.
+
+Explain the problem that this commit is solving. Focus on why you
+are making this change as opposed to how (the code explains that).
+Are there side effects or other unintuitive consequences of this
+change? Here's the place to explain them.
+
+Further paragraphs come after blank lines.
+
+ - Bullet points are okay, too
+
+ - Typically a hyphen or asterisk is used for the bullet, preceded
+   by a single space, with blank lines in between, but conventions
+   vary here
+ ```
+
+- The list of keywords you can choose from is the following:
+  - ```feat```
+  - ```fix```
+  - ```refactor```
+  - ```test```
+  - ```doc```
+  - ```task```
+- The first line of your commit, after the keyword, is the commit title.
+  Commit titles should complete the sentence "When this code is committed,
+  it will __________".
+- Commit titles should be written in the present tense; e.g. "Fix continuous
   integration script".
-- The first line of your commit message should be a brief summary of what the
-  commit changes. Aim for about 70 characters max. Remember: This is a summary,
+- The title should be a brief summary of what the commit changes.
+  Aim for about 50 characters max. Remember: This is a summary,
   not a detailed description of everything that changed.
 - If you want to explain the commit in more depth, following the first line should
   be a blank line and then a more detailed description of the commit. This can be
   as detailed as you want, so dig into details here and keep the first line short.
+- **Not every commit requires both a subject and a body.** Sometimes a single line is
+  fine, especially when the change is so simple that no further context is necessary.
+- Make changes and commits on your branch, and make sure that you
+  only make changes that are relevant to this branch. If you find
+  yourself making unrelated changes, make a new branch for those changes.
 
 ### Rebase upstream changes into your branch
 
@@ -125,7 +144,8 @@ you get here again and nothing is broken and all the tests pass.
 Make a clear pull request from your fork and branch to the upstream master
 branch, detailing exactly what changes you made and what feature this
 should add. The clearer your pull request is the faster you can get
-your changes incorporated into this repo.
+your changes incorporated into this repo. The commit message on the
+pull request should match the commit message guidelines above.
 
 At least one other person MUST give your changes a code review, and once
 they are satisfied they will merge your changes into upstream. Alternatively,
@@ -143,11 +163,11 @@ Thanks for contributing!
 1. Uphold the current code standard:
     - Keep your code [DRY][].
     - Apply the [boy scout rule][].
-    - Follow the [AirBnB Style Guide](https://github.com/airbnb/javascript).
+    - Follow the [AirBnB Style Guide][]
 1. Run the [tests][] before submitting a pull request.
 1. Tests are very, very important. Submit tests if your pull request contains
    new, testable behavior.
-1. Your pull request is comprised of a single ([squashed][]) commit.
+1. Your pull request is **not** a single ([squashed][]) commit.
 
 ## Checklist:
 
@@ -170,6 +190,8 @@ no problem getting your changes merged in.
 [pull request]: https://help.github.com/articles/using-pull-requests/
 [DRY]: http://en.wikipedia.org/wiki/Don%27t_repeat_yourself
 [boy scout rule]: http://programmer.97things.oreilly.com/wiki/index.php/The_Boy_Scout_Rule
+[AirBnB Style Guide] : https://github.com/airbnb/javascript
 [squashed]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
 <!-- A link to your directory of tests on github -->
 [tests]: tests/
+[Chris Beams]: http://chris.beams.io/posts/git-commit/
