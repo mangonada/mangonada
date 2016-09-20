@@ -4,6 +4,9 @@
   "description": "Git visualizer",
   "main": "index.js",
   "repository": "https://github.com/mangonada/mangonada",
+  "engines": {
+  "node": "6.4.0"
+},
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
