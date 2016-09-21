@@ -28,7 +28,7 @@ function rememberNum(increment) {
 }
 
 /**
- * A function returned by rememberNum() that will return a 
+ * A function returned by rememberNum() that will return a
  * number incremented by 1 or 2 whenever it is called.
  * @type {Function}
  */
