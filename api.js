@@ -57,12 +57,12 @@ router.route('/repos/:userName/:repoName')
         return container;
       }, requestAllCommits);
 
-      res.status(200).json(requestAllCommits.accum);
+      res.status(200).json([branches, requestAllCommits.accum]);
 
     }, (reason) => {
       res.status(401).end('noooooo');
-    }).then( (results) => { console.log(results);});
-    
+    }).then( (results) => { console.log(results);}); // what are we doing with this line?
+
     // functions
     function makeRequestBranchCommits(results, branch, index) {
       const commitsOpt = { uri : `${commitsURL}?sha=${branch.commit.sha}&${secrets}`,
@@ -71,12 +71,8 @@ router.route('/repos/:userName/:repoName')
       results.push(branchPromise);
       return results;
     }
-    
-    
   });
-
 });
 
 
 module.exports = router;
-

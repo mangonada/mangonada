@@ -1,16 +1,26 @@
 $(function() {
 
-  const branches = "https://api.github.com/repos/mangonada/mangonada/branches";
-  const commits = "https://api.github.com/repos/mangonada/mangonada/commits";
+  // const branches = "https://api.github.com/repos/mangonada/mangonada/branches";
+  // const commits = "https://api.github.com/repos/mangonada/mangonada/commits";
 
-  makeGraph();
+ $('form').on('submit', function(e){
+   e.preventDefault();
+   let url = $('#url-input').val();
+   url = url.split('/').reverse();
+   [repo, user, ...rest] = url;
+   $.get(`/api/repos/${user}/${repo}`, function (data){
+     [JSONbranches, JSONcommits] = data;
+   });
+ });
 
-  function makeGraph() {
-    var cy_id = document.getElementById('cy');
-    var elements = cytoNodes.concat(cytoEdges);
+  makeGraph(cytoNodes, cytoEdges);
+
+  function makeGraph(cytoNodes, cytoEdges) {
+    const cy_id = document.getElementById('cy');
+    const elements = cytoNodes.concat(cytoEdges);
 
     console.log(elements);
-    var data = {
+    const data = {
       container: cy_id,
       elements: elements,
       style: [
@@ -26,8 +36,8 @@ $(function() {
         name: 'preset'
       }
     };
-    
-    var cy = cytoscape(data);
+
+    const cy = cytoscape(data);
 
     cy.on('tapstart', 'node', { foo: 'start' }, showEvent);
     cy.on('tapend', 'node', { foo: 'end' }, showEvent);
@@ -39,7 +49,7 @@ $(function() {
     cy.on('drag', 'node', { foo : 'drag'}, showEvent);
 
     function showEvent(evt){
-      var node = evt.cyTarget;
+      const node = evt.cyTarget;
       console.log( evt.data.foo, node.id(), node.position() );
     }
   }
