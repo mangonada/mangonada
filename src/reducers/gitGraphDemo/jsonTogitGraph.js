@@ -1227,7 +1227,7 @@ var JSONcommits = [
         },
         "parents": []
     }
-]
+];
 
 
 let githubTranslator = new GithubApiInterface(JSONcommits, JSONbranches);
