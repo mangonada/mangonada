@@ -323,10 +323,10 @@ class RepoDisplay extends Component {
           const curveData = [ { x:commit.y, y:commit.x },{x:childObj.y,  y:childObj.x }];
           const edge = d3.select("svg").append('g');
           const diagonal = d3.svg.diagonal()
-            .source(function(d) {return {"x":d[0].y, "y":d[0].x}; })            
+            .source(function(d) {return {"x":d[0].y, "y":d[0].x}; })
             .target(function(d) {return {"x":d[1].y, "y":d[1].x}; })
             .projection(function(d) { return [d.y, d.x]; });
-             
+
           d3.select("g")
               .datum(curveData)
             .append("path")
@@ -361,7 +361,6 @@ class RepoDisplay extends Component {
       const tooltipContent =
 `${originalBranches.includes(branch) ? 'Branch: ' + makeAnchor(branch, branchLink) + '\n' : '' }SHA:     ${makeAnchor(sha.slice(0, 9) + '...', url)}
 Author:  ${authorName}
-
 Message: ${commit.commit.message}`;
 
       infoTip.html(`<pre>${tooltipContent}</pre>`);

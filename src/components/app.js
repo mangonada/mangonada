@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import RepoDisplay from '../containers/repo_display';
 import SearchBar from '../containers/searchbar';
+import Chart from '../containers/chart';
 
 export default class App extends Component {
   render() {
@@ -13,6 +14,7 @@ export default class App extends Component {
       <div>
         <SearchBar />
         <RepoDisplay />
+        <Chart />
       </div>
     );
   }
