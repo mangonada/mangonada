@@ -27,7 +27,7 @@ class RepoDisplay extends Component {
     $('#container').remove();
     $('.d3-tip').remove();
     $('body').append('<div id="container"></div>');
- 
+
     const pageWidth = window.innerWidth;
     const pageHeight = window.innerHeight - 32;
 
@@ -98,7 +98,7 @@ class RepoDisplay extends Component {
        * @return {Number} - the y position.
        */
       function generateY(branch, y = firstCheckForY) {
-        //if we're at a new branch we need to jump to another level        
+        //if we're at a new branch we need to jump to another level
         if(branch !== lastBranch) {
           lastBranch = branch;
           return generateY(branch, y + yOffset);
@@ -110,7 +110,7 @@ class RepoDisplay extends Component {
 
         taken.forEach(set => {
           if(set.y === y) {
-            if((set.start <= thisBranchStartPoint && thisBranchStartPoint <= set.end) || 
+            if((set.start <= thisBranchStartPoint && thisBranchStartPoint <= set.end) ||
               (set.start <= thisBranchEndPoint && thisBranchEndPoint <= set.end)) {
               overlap = true;
             }
@@ -137,7 +137,7 @@ class RepoDisplay extends Component {
       const yOffset = 40;
 
       //Create the x-value for each commit.
-      JSONCommits.forEach(commit => { 
+      JSONCommits.forEach(commit => {
         commit.x = generateX(commit);
 
         //if it's the first time we're processing a commit from this branch, create an object
@@ -155,7 +155,7 @@ class RepoDisplay extends Component {
        * y-value. Initialize with a hard-coded master.
        * @type {Array}
        */
-      const taken = [{ 
+      const taken = [{
         y: 360,
         start: branchXCoordinates['master'].start,
         end: branchXCoordinates['master'].end,
@@ -194,7 +194,7 @@ class RepoDisplay extends Component {
                 changed = true;
               }
             }
-          }); 
+          });
         });
       } while(changed);
 
@@ -355,6 +355,7 @@ class RepoDisplay extends Component {
 
     // Make the lines
     d3commits.forEach(commit => {
+      console.log('make lines!');
       commit.children.forEach(child => {
         let childObj = githubTranslator.getCommit(child);
 
@@ -364,12 +365,13 @@ class RepoDisplay extends Component {
 
       //curved lines: http://stackoverflow.com/questions/34558943/draw-curve-between-two-points-using-diagonal-function-in-d3-js
         const curveData = [ {x:commit.x, y:commit.y },{x:childObj.x,  y:childObj.y}];
-        const edge = d3.select("svg").append('g');
+        // const edge = d3.select("svg").append('g');
+        const edge = svg.append('g');
         const diagonal = d3.svg.diagonal()
-          .source(function(d) {return {"x":d[0].y, "y":d[0].x}; })            
+          .source(function(d) {return {"x":d[0].y, "y":d[0].x}; })
           .target(function(d) {return {"x":d[1].y, "y":d[1].x}; })
           .projection(function(d) { return [d.y, d.x]; });
-           
+
         d3.select("g")
             .datum(curveData)
           .append("path")

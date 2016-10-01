@@ -20,9 +20,6 @@ import Menu from 'material-ui/svg-icons/navigation/menu';
 import AppBar from 'material-ui/AppBar';
 import {orange500, blue500} from 'material-ui/styles/colors';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import FontIcon from 'material-ui/FontIcon';
-import Timeline from 'material-ui/svg-icons/action/Timeline';
-import Equalizer from 'material-ui/svg-icons/av/Equalizer';
 import NavTabs from '../components/tabs';
 
 
