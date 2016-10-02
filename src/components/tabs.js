@@ -5,6 +5,7 @@ import RepoDisplay from '../containers/repo_display';
 import FontIcon from 'material-ui/FontIcon';
 import Timeline from 'material-ui/svg-icons/action/timeline';
 import Equalizer from 'material-ui/svg-icons/av/equalizer';
+import { Link } from 'react-router';
 
 const styles = {
   headline: {
@@ -22,31 +23,38 @@ function handleActive(tab) {
 
 export default class NavTabs extends Component {
   // need to refactor to use react properly at some point
-  getGitGraph(){
-    console.log('get graph');
-    document.getElementById('stats').className="hidden";
-    document.getElementById('container').classList.remove("hidden");
-  }
-
-  getStats(){
-    console.log('get stats');
-    document.getElementById('container').className="hidden";
-    document.getElementById('stats').classList.remove("hidden");
-  }
+  // getGitGraph(){
+  //   console.log('get graph');
+  //   document.getElementById('stats').className="hidden";
+  //   document.getElementById('container').classList.remove("hidden");
+  // }
+  //
+  // getStats(){
+  //   console.log('get stats');
+  //   document.getElementById('container').className="hidden";
+  //   document.getElementById('stats').classList.remove("hidden");
+  // }
 
   render (){
     return (
-      <Tabs inkBarStyle={{background: 'none'}}>
-      <Tab
+      <div>
+       {/* <Tabs inkBarStyle={{background: 'none'}}> */}
+      {/* <Tab
         icon={<Timeline />}
         style={{padding: 5}}
-        onActive={this.getGitGraph} >
-      </Tab>
-      <Tab
+        // onActive={this.getGitGraph}
+      > */}
+      <Link to="/">CLICK THIS</Link>
+      {/* </Tab> */}
+      {/* <Tab
         icon={<Equalizer />}
         style={{padding: 5}}
-        onActive={this.getStats} >
-      </Tab>
-    </Tabs>
+        // onActive={this.getStats}
+      > */}
+      <Link to="/chart">CHART</Link>
+
+      {/* </Tab> */}
+     {/* </Tabs> */}
+     </div>
   )}
 }

@@ -1,7 +1,7 @@
 /* eslint-disable */
 /**
  * repo_display.js
- * 
+ *
  * This is the container that displays the repo itself. It needs access to the
  * redux state to receive the commit data returned from the api call. Does not
  * need to dispatch to the redux state.
@@ -24,12 +24,24 @@ import helpers from './display_helpers';
 d3.tip = tooltip;
 
 class RepoDisplay extends Component {
+  //runs after repodisplay renders initially
+  componentDidMount(){
+    console.log("Component did mount?");
+    this.makeD3Display();
+  }
+  shouldComponentUpdate(){
+    console.log("component update")
+    this.makeD3Display();
+  }
+  // componentWillUnmount(){
+  //   // remove all svg elements
+  //   d3.select("svg").remove();
+  //   $('#container').remove();
+  //   $('.d3-tip').remove();
+  //   $('body').append('<div id="container"></div>');
+  // }
   makeD3Display () {
-    // remove all svg elements
-    d3.select("svg").remove();
-    $('#container').remove();
-    $('.d3-tip').remove();
-    $('body').append('<div id="container"></div>');
+
 
     const pageWidth = window.innerWidth;
     const pageHeight = window.innerHeight;
@@ -134,9 +146,10 @@ class RepoDisplay extends Component {
   }
 
   render() {
+    console.log("rendering repo_display");
     return (
       <div>
-        {this.makeD3Display()}
+      <div id="container"></div>
       </div>
     );
   }
