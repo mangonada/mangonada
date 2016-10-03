@@ -8,7 +8,8 @@
     "start": "node server/server.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch",
-    "postinstall": "webpack -p",
+    "make-json-database" : "echo '{}' > server/database.json",
+    "postinstall": "npm run make-json-database && webpack -p",
     "json-server": "json-server -f server/mock-database.json -p 5000",
     "lint": "eslint *.js --fix"
   },
@@ -43,6 +44,7 @@
     "babel-regenerator-runtime": "^6.5.0",
     "bootstrap": "^3.3.7",
     "express": "^4.14.0",
+    "jquery": "^2.2.4",
     "json-server": "^0.8.21",
     "lodash": "^3.10.1",
     "lowdb": "^0.13.1",
