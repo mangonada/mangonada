@@ -9,20 +9,9 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 8080;
 
-const compiler = webpack(webpackConfig);
-
 app.set('port', port);
 
 app.use(morgan('combined'));
-
-app.use(webpackMiddleware(compiler, {
-  stats: {
-    colors: true,
-    reasons: true,
-  },
-
-  publicPath: webpackConfig.output.publicPath,
-}));
 
 app.use(express.static(path.join(__dirname, '/..')));
 

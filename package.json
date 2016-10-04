@@ -8,8 +8,7 @@
     "start": "node server/server.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch",
-    "make-json-database" : "echo '{}' > server/database.json",
-    "postinstall": "npm run make-json-database && webpack -p",
+    "postinstall": "webpack -p",
     "json-server": "json-server -f server/mock-database.json -p 5000",
     "lint": "eslint *.js --fix"
   },

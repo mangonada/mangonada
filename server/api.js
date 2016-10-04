@@ -24,12 +24,24 @@ router.param('endpoint', (req, res, next, endpointLabel) => {
 
 router.route('/repos/:userName/:repoName')
 .all((req, res, next) => {
-  next();
+  const gitURL = `https://api.github.com/repos/${req.user}/${req.repo}`;
+  const userAgent = 'cadeban';
+  const secrets = 'client_id=423335fdf206466ccd3b&client_secret=bc10a999efc0335d06b6d84d470b76eda5a97b30';
+  const summaryOpt = { uri: `${gitURL}?${secrets}`, headers: { 'User-Agent': userAgent } };
+
+  request(summaryOpt).then((summary) => {
+    const overview = JSON.parse(summary);
+    req.user_repo = `${req.user}/${req.repo}`;
+    req.repo_overview = overview;
+    next();
+  }).catch((error) => {
+    res.status(401).json({error});
+  });
 })
  .get(
    (req, res, next) => {
      // mongo database middleware
-     const query = { repo : [req.user, req.repo].join("/") };
+     const query = { id : req.user_repo };
      models.GithubData.findOne(query, function success_or_fail(error, data) {
        if (error) {
          next();
@@ -37,12 +49,19 @@ router.route('/repos/:userName/:repoName')
          next();
        }
        if (data) {
-         const packet = { repo : data.repo,
-                          JSONBranches : data.branches,
-                          JSONCommits : data.commits };
-
-         res.status(200).json(packet);
-         return;
+         if (data.repo.pushed_at !== req.repo_overview.pushed_at) {
+           models.GithubData.remove(query, function success_or_fail(remove_error, remove_data) {
+             next();
+           });
+           return;
+         } else {
+           const packet = { id : data.user_repo,
+                            repo : data.repo,
+                            JSONBranches : data.branches,
+                            JSONCommits : data.commits };
+           res.status(200).json(packet);
+           return;
+         }
        }
      });
    },
@@ -86,7 +105,8 @@ router.route('/repos/:userName/:repoName')
            return container;
          }, requestAllCommits);
 
-         const jsonData = { repo : [req.user, req.repo].join("/"),
+         const jsonData = { id : req.user_repo,
+                            repo :  req.repo_overview,
                             branches : branches,
                             commits : requestAllCommits.commits };
 
@@ -97,7 +117,8 @@ router.route('/repos/:userName/:repoName')
              return;
            }
 
-           const packet = { repo : jsonData.repo,
+           const packet = { id : jsonData.id,
+                            repo : jsonData.repo,
                             JSONBranches : jsonData.branches,
                             JSONCommits : jsonData.commits };
            res.status(200).json(packet);
