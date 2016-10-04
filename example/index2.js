@@ -64,14 +64,18 @@ $(function() {
       return function(jsonCommit, index) {
         const sha1 = jsonCommit.sha;
         const branch = jsonCommit.branch;
-        const msg0 = jsonCommit.commit.message.slice(0, 10);
-        const sha5 = branch + "/" +sha1.slice(0, 5);
+        const branchSha5 = jsonCommit.branch + "/" +sha1.slice(0, 5);
+        const message10 = jsonCommit.commit.message.slice(0, 10);
+        const sha5 = sha1.slice(0, 5);
 
 
         const x = (index  + 1) * scale;
         const y = columnPosition[branch];
 
-        const node = { data : { id : sha1, branch: branch, name : sha5, message: msg0 },
+        const node = { data : { id : sha1,
+                                branch: branch,
+                                branchSha5 : branchSha5,
+                                sha5: sha5, message: message10 },
                        position : { x : -x, y: -y } };
         // console.log(node, columnPosition, jsonCommit);
         // good node: 807ba7177e64eec020d41a0b59cd11224af8f4fe
@@ -130,8 +134,8 @@ $(function() {
 
     mapEdge(edges, jsonCommit) {
       return jsonCommit.parents.reduce(function (parentEdges, parent) {
-               const source = parent.sha;
-               const target = jsonCommit.sha;
+               const target = parent.sha;
+               const source = jsonCommit.sha;
                // console.log("source", source, "target", target);
                const edge = { data : { id : [source, target].join('_'), source : source, target : target } };
                parentEdges.push(edge);
@@ -141,8 +145,9 @@ $(function() {
     }
 
     addGraph(elementId) {
+      console.log("hello there");
       const cy_id = document.getElementById(elementId);
-      const elements = this.cytoNodes.concat(this.cytoEdges);
+      const elements = { nodes : this.cytoNodes, edges : this.cytoEdges };
       const layout =  { name: 'preset' };
       const nodeStyles = {
         "master" : { selector : "master" , 'background-color' : '#999' },
@@ -150,21 +155,40 @@ $(function() {
         "hello" : { selector : "hello", 'background-color' : '#111' },
         "onelinechange" : { selector : "onelinechange", 'background-color' : '#f0f' }
       };
-      const styles = [ {
-        selector: 'node',
-        style: {
-          'background-color': '#666',
-          'label': 'data(name)'
-        }
-      } ];
-
+      const styles = [
+        {
+	  selector: 'node',
+	  style: {
+            // 'label': 'data(name)',
+	    // 'content': 'data(id)',
+	    'content': 'data(branchSha5)',
+	    'width': 20,
+	    'height': 20,
+	    'text-opacity': 0.5,
+	    'text-valign': 'center',
+	    'text-halign': 'right',
+	    'background-color': '#11479e'
+	  }
+	},
+	{
+	  selector: 'edge',
+	  style: {
+	    'width': 6,
+	    'target-arrow-shape': 'triangle',
+	    'line-color': '#9dbaea',
+	    'target-arrow-color': '#9dbaea',
+	    'curve-style': 'bezier'
+	  }
+	}
+      ];
+      
       const data = {
         container: cy_id,
         elements: elements,
         style: styles,
         layout: layout
       };
-
+      
       const cy = cytoscape(data);
 
       cy.on('tapstart', 'node', { foo: 'start' }, showEvent);

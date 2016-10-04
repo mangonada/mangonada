@@ -43,6 +43,7 @@
     "babel-regenerator-runtime": "^6.5.0",
     "bootstrap": "^3.3.7",
     "express": "^4.14.0",
+    "jquery": "^2.2.4",
     "json-server": "^0.8.21",
     "lodash": "^3.10.1",
     "lowdb": "^0.13.1",

@@ -20,7 +20,6 @@ app.use(webpackMiddleware(compiler, {
     colors: true,
     reasons: true,
   },
-
   publicPath: webpackConfig.output.publicPath,
 }));
 
