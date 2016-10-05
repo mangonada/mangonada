@@ -1,5 +1,6 @@
 /* eslint-disable */
 /**
+
  * This is the container that displays the repo itself. It needs access to the
  * redux state to receive the commit data returned from the api call. Does not
  * need to dispatch to the redux state.
@@ -51,6 +52,7 @@ class RepoDisplay extends Component {
       zoomed,
       // startLoadAnimation,
       addColors,
+      addDates,
     } = displayHelpers;
 
     addColors(branchLookup);
@@ -124,9 +126,12 @@ class RepoDisplay extends Component {
       .attr('stroke', commit => branchLookup[commit.branch].color)
       .attr('fill', commit => branchLookup[commit.branch].color);
 
-      //show the tool on hover
-      nodes.on('mouseover', node => showToolTip(node, originalBranches, infoTip));
+    //show the tool on hover
+    nodes.on('mouseover', node => showToolTip(node, originalBranches, infoTip));
+
+    addDates(svg, d3commits);
   }
+
 
   render() {
     return (

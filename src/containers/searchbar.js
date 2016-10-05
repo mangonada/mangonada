@@ -37,7 +37,7 @@ class SearchBar extends Component {
     super();
 
     this.state = {
-      urlEntered: '',
+      urlEntered: 'https://github.com/',
       open: false,
     };
   }

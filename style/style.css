@@ -2,17 +2,27 @@ body {
   overflow: hidden;
 }
 
-.reactContainer {
-   top: 0; right: 0; bottom: 0; left: 0;
- }
-
  #git {
    top: 50%;
  }
 
- .hidden {
-   display: none;
+#chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: black;
+}
+
+.reactContainer {
+   top: 0; right: 0; bottom: 0; left: 0;
  }
+
+
+.hidden {
+  display: none;
+}
 
 .selected {
   fill: red;
@@ -23,14 +33,6 @@ body {
   stroke-width: 4px;
 }
 
-#chart div {
-  font: 10px sans-serif;
-  background-color: steelblue;
-  text-align: right;
-  padding: 3px;
-  margin: 1px;
-  color: black;
-}
 
 .d3-tip {
   line-height: 1;
@@ -70,4 +72,9 @@ pre {
   white-space: -pre-wrap;                /* Opera 4 thru 6 */
   white-space: -o-pre-wrap;              /* Opera 7 and up */
   word-wrap: break-word;                 /* IE 5.5+ and up */
+  overflow: hidden;
+}
+
+.dateText {
+  font-size: 8; /* doesn't work */
 }

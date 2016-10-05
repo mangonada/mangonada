@@ -19,7 +19,8 @@ function checkOverlap(range1, range2) {
  * have a higher x-value than the one before it.
  */
 function generateX(numCommits) {
-  return 40 + numCommits * 30;
+  const xOffset = 30;
+  return 40 + numCommits * xOffset;
 }
 
 /**
