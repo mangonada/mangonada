@@ -67,9 +67,9 @@ class SearchBar extends Component {
   onFormSubmit(event) {
     if(event.keyCode === 13){
       event.preventDefault();
-      if (this.props.onSubmit) {
-        this.props.onSubmit(event.target.value);
-      }
+      // if (this.props.onSubmit) {
+      //   this.props.onSubmit(event.target.value);
+      // }
       this.props.fetchRepo(this.state.urlEntered);
       if (this.state.urlEntered) {
         const hash = "/#" + this.state.urlEntered.slice().split('github.com')[1];
