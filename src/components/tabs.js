@@ -8,53 +8,36 @@ import Equalizer from 'material-ui/svg-icons/av/equalizer';
 import FormatQuote from 'material-ui/svg-icons/editor/format-quote';
 import Bubbles from 'material-ui/svg-icons/editor/bubble-chart';
 
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-};
+function enterTab(elementId) {
+  console.log('get ' + elementId);
 
-function handleActive(tab) {
-  alert(`A tab with this route property ${tab.props['data-route']} was activated.`);
+  d3.selectAll('.d3-tip')
+    .style('opacity', 0)
+    .html('');
+
+  document.getElementById('stats').className="hidden";
+  document.getElementById('word-cloud').className="hidden";
+  document.getElementById('container').className="hidden";
+  document.getElementById('bubble-chart').className="hidden";
+
+  document.getElementById(elementId).classList.remove("hidden");
 }
 
-
 export default class NavTabs extends Component {
-  // need to refactor to use react properly at some point
-  // make DRY?
   getGitGraph(){
-    console.log('get graph');
-    document.getElementById('stats').className="hidden";
-    document.getElementById('word-cloud').className="hidden";
-    document.getElementById('container').classList.remove("hidden");
-    document.getElementById('bubble-chart').className="hidden";
+    enterTab('container');
   }
 
   getStats(){
-    console.log('get stats');
-    document.getElementById('container').className="hidden";
-    document.getElementById('word-cloud').className="hidden";
-    document.getElementById('stats').classList.remove("hidden");
-    document.getElementById('bubble-chart').className="hidden";
+    enterTab('stats');
   }
 
   getWordCloud(){
-    console.log('get word cloud');
-    document.getElementById('container').className="hidden";
-    document.getElementById('stats').className="hidden";
-    document.getElementById('word-cloud').classList.remove("hidden");
-    document.getElementById('bubble-chart').className="hidden";
+    enterTab('word-cloud');
   }
 
   getBubbleChart(){
-    console.log('get bubble chart');
-    document.getElementById('container').className="hidden";
-    document.getElementById('stats').className="hidden";
-    document.getElementById('word-cloud').className="hidden";
-    document.getElementById('bubble-chart').classList.remove("hidden");
+    enterTab('bubble-chart');
   }
 
   render (){

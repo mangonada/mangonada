@@ -64,9 +64,18 @@ class RepoDisplay extends Component {
       .direction('s')
       .offset([10, 0]);
 
+    const totalCommits = d3commits.length;
+    const largeLimit = 10;
+    let smallLimit;
+    if(totalCommits < 500) smallLimit = 0.1;
+    else if (totalCommits < 1000) smallLimit = 0.05;
+    else if (totalCommits < 2000) smallLimit = 0.25;
+    else smallLimit = 0.01;
+    const zoomLimit = [smallLimit, largeLimit];
+
     //https://bl.ocks.org/mbostock/6123708
     const zoom = d3.behavior.zoom()
-      .scaleExtent([0.1, 10])
+      .scaleExtent(zoomLimit)
       .on("zoom", () => zoomed(svg));
 
     let svg = d3.select('#container').append('svg')
@@ -101,16 +110,15 @@ class RepoDisplay extends Component {
           .projection(function(d) { return [d.y, d.x]; });
 
         try {
-        svg.select("g")
-            .datum(curveData)
-          .append("path")
-            .attr("class", "line")
-            .attr("d", diagonal)
-            .attr("stroke-width", 1)
-          .attr('stroke', branchLookup[commit.branch].color)
-          .attr('fill', 'none');
-        }
-        catch(err) {
+          svg.select("g")
+              .datum(curveData)
+            .append("path")
+              .attr("class", "line")
+              .attr("d", diagonal)
+              .attr("stroke-width", 1)
+            .attr('stroke', branchLookup[commit.branch].color)
+            .attr('fill', 'none');
+        } catch(err) {
           console.log(err);
         }
       });

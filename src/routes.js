@@ -56,6 +56,10 @@ class AppWrapper extends Component {
       });
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
   render() {
     let user_repo ='https://github.com/';
     if (this.props.params.user && this.props.params.repo) {
@@ -64,7 +68,7 @@ class AppWrapper extends Component {
     return (
       <div>
         <SearchBar urlEntered={user_repo} onSubmit={this.updateUrl.bind(this)} />
-        <form onInput={this.filterRepo}>
+        <form onInput={this.filterRepo} onSubmit={this.handleSubmit}>
           <input type="text" className="form-control" placeholder="Keyword search" />
         </form>
         {this.props.children}
