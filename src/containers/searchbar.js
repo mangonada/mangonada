@@ -21,7 +21,7 @@ import AppBar from 'material-ui/AppBar';
 import {orange500, blue500} from 'material-ui/styles/colors';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import NavTabs from '../components/tabs';
-
+import $ from 'jquery';
 
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -75,6 +75,8 @@ class SearchBar extends Component {
         const hash = "/#" + this.state.urlEntered.slice().split('github.com')[1];
         window.location.hash = hash;
       }
+      // render loading screen
+      $('#loading').removeClass('hidden');
     }
   }
 

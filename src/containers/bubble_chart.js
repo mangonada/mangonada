@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -88,21 +89,34 @@ class BubbleChart extends Component {
     };
   }
 
-  makeContributors(){
-  let context = this;
+  makeContributors() {
+    const context = this;
   // Prep data
-  let dataObj = this.props.currentRepo.JSONCommits.reduce((accum, commit) => {
-    if (accum[commit.author.login] === undefined){
+  const dataObj = this.props.currentRepo.JSONCommits.reduce((accum, commit) => {
+    if (accum[commit.author.login] === undefined) {
       accum[commit.author.login] = {
         author: commit.commit.author.name,
         commits: 1,
         imgUrl: commit.author.avatar_url,
         url: commit.author.url,
         username: commit.author.login,
+        lines: 0,
       }
     } else {
       accum[commit.author.login].commits += 1;
     }
+
+    // $.ajax({
+    //   url: commit.url,
+    //   success: function (data) {
+    //     console.log(accum[commit.author.login], data.stats.additions);
+    //     accum[commit.author.login].lines += data.stats.additions - data.stats.deletions;
+    //   },
+    //   error: function (error) {
+    //     console.error(error);
+    //   }
+    // });
+
     return accum;
   }, {});
 
@@ -194,6 +208,7 @@ class BubbleChart extends Component {
           commits: d.commits,
           imgUrl: d.imgUrl,
           username: d.username,
+          lines: d.lines,
           x: Math.random() * 900,
           y: Math.random() * 800
         };
@@ -311,6 +326,8 @@ class BubbleChart extends Component {
         </span>
         <br>
         ${d.commits} commits
+        <br>
+        ${d.lines} contributed lines
         <br>
         <a href='https://www.github.com/${d.username}'>See profile</a>
         <br>

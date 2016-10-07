@@ -24,6 +24,7 @@ function handleActive(tab) {
 
 export default class NavTabs extends Component {
   // need to refactor to use react properly at some point
+  // make DRY?
   getGitGraph(){
     console.log('get graph');
     document.getElementById('stats').className="hidden";

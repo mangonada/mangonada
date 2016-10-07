@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * The top-most component. Does not do anything except render
  * SearchBar and RepoDisplay.

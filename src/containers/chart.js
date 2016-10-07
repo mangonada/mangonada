@@ -5,7 +5,7 @@
  * Add overflow for commit list
  * Make CSS values % instead of px
  */
-
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { Route, IndexRoute } from 'react-router';
 
@@ -56,11 +57,15 @@ class AppWrapper extends Component {
   }
 
   render() {
+<<<<<<< 9e6cfc670a1ee616299a50a748daa8f4af04d0bb
     let user_repo ='https://github.com/';   
     if (this.props.params.user && this.props.params.repo) {   
       user_repo += this.props.params.user + '/' + this.props.params.repo;   
     }
     
+=======
+    console.log(this.props.children);
+>>>>>>> (feat) add basic loading icon
     return (
       <div>
         <SearchBar urlEntered={user_repo} onSubmit={this.updateUrl.bind(this)} />
@@ -75,7 +80,13 @@ class AppWrapper extends Component {
 
 export default (
   <Route path="/" component={AppWrapper}>
+<<<<<<< 9e6cfc670a1ee616299a50a748daa8f4af04d0bb
     <IndexRoute component={App} />
     <Route path=":user/:repo" component={App} />
   </Route>  
+=======
+    <IndexRoute component={App}/>
+    <Route path=":user/:repo" component={App}/>
+  </Route>
+>>>>>>> (feat) add basic loading icon
 );
