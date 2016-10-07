@@ -1,5 +1,6 @@
 /* eslint-disable */
 /**
+
  * This is the container that displays the repo itself. It needs access to the
  * redux state to receive the commit data returned from the api call. Does not
  * need to dispatch to the redux state.
@@ -49,8 +50,9 @@ class RepoDisplay extends Component {
       showToolTip,
       makeAnchor,
       zoomed,
-      // startLoadAnimation,
+      renderRepoName,
       addColors,
+      addDates,
     } = displayHelpers;
 
     addColors(branchLookup);
@@ -82,10 +84,7 @@ class RepoDisplay extends Component {
     let container = svg.append('g');
     const straightLineLocations = [];
 
-    // Make the lines
-    console.log('lines', d3commits);
     d3commits.forEach(commit => {
-      console.log('make lines!');
       commit.children.forEach(child => {
         let childObj = githubTranslator.getCommit(child);
 
@@ -124,11 +123,18 @@ class RepoDisplay extends Component {
       .attr('stroke', commit => branchLookup[commit.branch].color)
       .attr('fill', commit => branchLookup[commit.branch].color);
 
-      //show the tool on hover
-      nodes.on('mouseover', node => showToolTip(node, originalBranches, infoTip));
+    //show the tool on hover
+    nodes.on('mouseover', node => showToolTip(node, originalBranches, infoTip));
+
+    addDates(svg, d3commits);
+    renderRepoName(d3commits[0], svg);
   }
 
+
   render() {
+    
+    $('#loading').addClass('hidden');
+
     return (
       <div>
         {this.makeD3Display()}

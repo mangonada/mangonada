@@ -6,3 +6,4 @@ build/
 bundle.js
 server/config.js
 server/database.json
+.DS_Store

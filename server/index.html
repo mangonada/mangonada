@@ -1,68 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
     <link rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
     <link rel="stylesheet" href="/style/style.css">
     <script src="../src/reducers/chartD3/crossfilter.js"></script>
     <script src="../src/reducers/chartD3/d3.layout.cloud.js"></script>
-    <script>
-      function filterRepo(event) {
-        event.preventDefault();
-
-        //make all nodes the correct color (not red)
-        d3.selectAll('circle')
-          .each(function(node){
-            d3.select(this)
-              .classed('selected', false);
-          });
-
-        //consistently use toLowerCase() to remove case-sensitivity
-        const terms = event.target.value.toLowerCase().split(' ');
-
-        //if empty string, return
-        if(terms[0] === '') return;
-
-        d3.selectAll('circle')
-          .each(function(node){
-            const nodeText = JSON.stringify(node).toLowerCase();
-            const termCheck = terms.map(term => nodeText.includes(term));
-
-            //if no false values are in the termCheck array
-            if(!termCheck.includes(false)) {
-              d3.select(this)
-                .classed('selected', true);
-            }
-          });
-      }
-    </script>
   </head>
   <body>
-    <div class="reactContainer"></div>
-    <form onInput="return filterRepo(event)">
-      <input  type="text" class="form-control" placeholder="Keyword search">
-    </form>
+    <div class="navbarContainer"></div>
+    <div id="loading">
+      <img src="../img/balls.gif" alt="Loading..." class="loading-gif" />
+    </div>
     <div id="container"></div>
-    <div id="stats" class="hidden">
-      hey martin
-      <div id="charts">
-        <div id="hour-chart" class="chart">
-          <div class="title">Time of Day</div>
-        </div>
-        <div id="date-chart" class="chart">
-          <div class="title">Date</div>
-        </div>
-      </div>
-      <aside id="totals"><span id="active">-</span> of <span id="total">-</span> commits selected.</aside>
-      <div id="lists">
-        <div id="flight-list" class="list"></div>
-      </div>
-    </div>
-
-    <div id ="word-cloud" class="hidden">
-
-    </div>
-
+    <div id="stats" class ="hidden"></div>
+    <div id ="word-cloud" class="hidden"></div>
+    <div id="bubble-chart" class="hidden"></div>
   </body>
   <script src="../build/bundle.js"></script>
 </html>

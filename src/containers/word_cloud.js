@@ -20,9 +20,12 @@ class WordCloud extends Component {
     const h = window.innerHeight;
 
     // create single string consisting of all words in commit messages
-    let words = this.props.currentRepo.JSONCommits.reduce((currentString, word) => currentString.concat(' ', word.commit.message), '');
-    // Replace punctuation with spaces
-    words = words.replace(/[!\.,:;\?]/g, '').split(' ')
+    let words = this.props.currentRepo.JSONCommits.reduce((currentString, word) => {
+      return currentString.concat(' ', word.commit.message);
+    }, '');
+
+    // Replace punctuation and digits with spaces
+    words = words.replace(/\d|\W/g, ' ').split(' ')
 
     // Count frequency of each word and create new array of non duplicates
     const frequencyCount = {};
@@ -49,7 +52,8 @@ class WordCloud extends Component {
     });
 
     // Scale of colors for words
-    const fill = d3.scale.category20();
+    // can choose from d3.scale.category20(),d3.scale.category20c(),d3.scale.category20b()
+    const fill = d3.scale.category20c();
 
     // Construct the word cloud's SVG element
     const svg = d3.select('#word-cloud')
@@ -84,7 +88,8 @@ class WordCloud extends Component {
     // Start word cloud placement
     d3.layout.cloud().size([w * 0.90, h * 0.70])
                      .words(words)
-                     .rotate(() => ~~((Math.random() * 6) - 2.5) * 30)
+                    //  .rotate(() => ~~((Math.random() * 6) - 2.5) * 30)
+                     .rotate(() => 0)
                      .text(d => d.text)
                      .font('Impact')
                      .fontSize(d => d.size)

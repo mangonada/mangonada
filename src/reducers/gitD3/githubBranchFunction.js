@@ -22,12 +22,7 @@ export default class GithubApiInterface {
     // json obj transformation
     this.addOrphanBranch();
     this.analyzeRepo();
-    // this.addParentObj();
-    this.validateCommits();
-  }
-
-  sortByDepth(a, b) {
-    return a.depth - b.depth;
+    this.correctCommitSequence();
   }
 
   validateCommits() {
@@ -53,6 +48,16 @@ export default class GithubApiInterface {
       // }
       if (commit.parentReferences === undefined) {
         // console.log("commit has no parent references", commit.sha.slice(0, 5));
+      }
+    });
+  }
+
+  correctCommitSequence() {
+    this.JSONCommits.sort((lhs, rhs) => {
+      if (lhs.commit.committer.date !== rhs.commit.committer.date) {
+        return new Date(lhs.commit.committer.date) - new Date(rhs.commit.committer.date)
+      } else {
+        return new Date(lhs.commit.author.date) - new Date(rhs.commit.author.date)
       }
     });
   }

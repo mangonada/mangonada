@@ -82,9 +82,13 @@ router.route('/repos/:userName/:repoName')
      .then((branches) => {
        branches = JSON.parse(branches);
        const requestBranchCommits = [];
-       branches.forEach((branch) => {
-         requestBranchCommits.push(makeRequestBranchCommits(branch.commit.sha, []));
-       });
+       const foundCommits = {}
+       branches.reduce((encounteredBranch, branch) => {
+         if (encounteredBranch[branch.commit.sha]) { return encounteredBranch; }
+         requestBranchCommits.push(makeRequestBranchCommits(branch.commit.sha, foundCommits));
+         encounteredBranch[branch.commit.sha] = true;
+         return encounteredBranch;
+       }, {});
        Promise.all(requestBranchCommits).then((allCommits) => {
          const requestAllCommits = { commits: [], lookup: {} };
          const allFlattenCommits = [].concat(...allCommits);
@@ -92,7 +96,13 @@ router.route('/repos/:userName/:repoName')
          /**
           * Sorts array of commits by timestamp
           */
-         allFlattenCommits.sort((lhs, rhs) => Date.parse(lhs.commit.committer.date) - Date.parse(rhs.commit.committer.date));
+         allFlattenCommits.sort((lhs, rhs) => {
+           if (lhs.commit.committer.date !== rhs.commit.committer.date) {
+             return new Date(lhs.commit.committer.date) - new Date(rhs.commit.committer.date)
+           } else {
+             return new Date(lhs.commit.author.date) - new Date(rhs.commit.author.date)
+           }
+         });
 
          /**
           * Filters array of commits to remove duplicates
@@ -130,25 +140,52 @@ router.route('/repos/:userName/:repoName')
        });
 
        /**
-         * [makeRequestBranchCommits gets a branches' commits from github's api in quantities of 100,
-                                                     * if there are more commits to be retrieved,
-                                                     * run getNextCommits again until there are no more commits to retrieve]
-                                                     * @param  {[String]} lastSha [Sha # of most recent commit on the branch]
-                                                     * @return {[Promise]} [Returns a promise that contains a recursive invocation to Github Api]
-          */
-       function makeRequestBranchCommits(branchLastSha) {
+        * [makeRequestBranchCommits gets a branches' commits from github's api in quantities of 100,
+        * if there are more commits to be retrieved,
+        * run getNextCommits again until there are no more commits to retrieve]
+        * @param  {[String]} lastSha [Sha # of most recent commit on the branch]
+        * @return {[Promise]} [Returns a promise that contains a recursive invocation to Github Api]
+        */
+       function makeRequestBranchCommits(branchLastSha, foundShaLookup) {
          return new Promise((resolve, reject) => {
-           function getNextCommits(lastSha, commitArr = []) {
+           function getNextCommits(lastSha, commitArr = [], ith = 1) {
              const commitsOpt = { uri: `${commitsURL}?sha=${lastSha}&per_page=100&${secrets}`,
                                   headers: { 'User-Agent': userAgent } };
+             console.log("commit requests get", ith, commitsOpt.uri.split('&')[0]);
              request(commitsOpt).then((commits) => {
                const commitObjs = JSON.parse(commits);
                commitArr.push(...commitObjs);
-               if (commitObjs.length < 100 || commitObjs[commitObjs.length - 1].parents.length === 0) {
+               commitArr.sort((lhs, rhs) => {
+                 if (lhs.commit.committer.date !== rhs.commit.committer.date) {
+                   return new Date(lhs.commit.committer.date) - new Date(rhs.commit.committer.date)
+                 } else {
+                   return new Date(lhs.commit.author.date) - new Date(rhs.commit.author.date)
+                 }
+               });
+               commitArr.filter((aCommit, seenCommits = {} ) => { 
+                 if (seenCommits[aCommit.sha]) { return false; }
+                 seenCommits[aCommit.sha] = true;
+                 return true;
+               });
+
+               commitArr.map((aCommit) => { foundShaLookup[aCommit.sha] = true; });
+               const commitMissingObjs = commitArr.reduce((missing, aCommit) => {
+                 aCommit.parents.map((parent) => {
+                   if (foundShaLookup[parent.sha] === undefined) {
+                     foundShaLookup[parent.sha] = true;
+                     missing.push(parent.sha);
+                   }
+                 });
+                 return missing;
+               }, []);
+               console.log("commit requests missing", ith, commitMissingObjs.length, commitMissingObjs);
+
+               if (commitMissingObjs.length === 0) {
+                 console.log("commit requests done", ith, lastSha);
                  resolve(commitArr);
-                 return;
+               } else {
+                 getNextCommits(commitMissingObjs.slice(-1).pop(), commitArr, ith++);
                }
-               getNextCommits(commitObjs[commitObjs.length - 1].sha, commitArr);
              });
            }
            getNextCommits(branchLastSha, []);
