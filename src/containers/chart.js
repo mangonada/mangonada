@@ -71,7 +71,7 @@ class CrossfilterChart extends Component {
     const nestByDate = d3.nest().key(d => d3.time.day(d.date));
 
     // Create array of weekdays to store in d.words property of commits
-    const weekdays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
     // Add properties to each commit
     commits.forEach((d, i) => {
@@ -100,21 +100,22 @@ class CrossfilterChart extends Component {
           .group(hours)
           .x(d3.scale.linear()
             .domain([0, 24])
-            .rangeRound([0, 10 * 24])),
+            .rangeRound([0, 14 * 24])),
       barChart()
           .dimension(day)
           .group(days)
           .x(d3.scale.linear()
-            .domain([0, 7])
-            .rangeRound([0, 20 * 7])),
+            // Domain starts at -1 and ends at 7 to add extra tick as padding on the sides
+            .domain([-1, 7])
+            .rangeRound([0, 30 * 7])),
       barChart()
           .dimension(date)
           .group(dates)
           .x(d3.time.scale()
-          // Domain is the range of the chart
+          // x-axis label of the chart
             .domain([startDate, endDate])
           // The range of the chart, how wide it is
-            .rangeRound([0, 10 * 90]))
+            .rangeRound([0, 10 * 80]))
           // Filter is the part of barChart that is selected
           .filter([filterStart, filterEnd]),
     ];
@@ -161,46 +162,41 @@ class CrossfilterChart extends Component {
     function commitList(div) {
       const commitsByDate = nestByDate.entries(date.top(40));
 
-      div.each(function() {
-        let date = d3.select(this).selectAll(".date")
+      div.each(function () {
+        const date = d3.select(this).selectAll('.date')
             .data(commitsByDate, d => d.key);
 
-        date.enter().append("div")
-            .attr("class", "date")
-          .append("div")
-            .attr("class", "day")
-            .text(function(d) {
-              // appends first date to top of list "Feburary 28, 2001"
-              return formatDate(d.values[0].date); });
+        date.enter().append('div')
+            .attr('class', 'date')
+          .append('div')
+            .attr('class', 'day')
+            // appends first date to top of list "Feburary 28, 2001"
+            .text(d => formatDate(d.values[0].date));
 
         date.exit().remove();
 
-        let commit = date.order().selectAll(".flight")
-            .data(function(d) { return d.values; }, function(d) { return d.index; });
+        const commit = date.order().selectAll('.flight')
+            .data((d) => { return d.values; }, (d) => { return d.index; });
 
-        const commitEnter = commit.enter().append("div")
-            .attr("class", "flight");
+        const commitEnter = commit.enter().append('div')
+            .attr('class', 'flight');
 
         // This is where they append data to divs
-        commitEnter.append("div")
-            .attr("class", "time")
-            .text(function(d) {
-              //format time to be only time
-              return formatTime(d.date); });
+        commitEnter.append('div')
+            .attr('class', 'time')
+            .text(d => formatTime(d.date));
 
-        commitEnter.append("div")
-            .attr("class", "origin")
-            .text(function(d) { return d.author.login; });
+        commitEnter.append('div')
+            .attr('class', 'origin')
+            .text(d => d.author.login);
 
-        commitEnter.append("div")
-            .attr("class", "destination")
-            .html(function(d) {
-              return `<pre>SHA: <a href="${d.html_url}" target="_blank">${d.sha.slice(0,9)}...</a></pre>`;
-            });
+        commitEnter.append('div')
+            .attr('class', 'destination')
+            .html(d => `<pre>SHA: <a href="${d.html_url}" target="_blank">${d.sha.slice(0, 9)}...</a></pre>`);
 
-        commitEnter.append("div")
-            .attr("class", "delay")
-            .text(function(d) { return d.commit.message; });
+        commitEnter.append('div')
+            .attr('class', 'delay')
+            .text(d => d.commit.message);
 
         commit.exit().remove();
         commit.order();
@@ -209,150 +205,186 @@ class CrossfilterChart extends Component {
 
     function barChart() {
       if (!barChart.id) barChart.id = 0;
+      let margin = { top: 10, right: 15, bottom: 20, left: 15 };
+      let x;
+      let y = d3.scale.linear().range([100, 0]);
+      let id = barChart.id++;
+      let axis = d3.svg.axis().orient('bottom');
+      let brush = d3.svg.brush();
+      let brushDirty;
+      let dimension;
+      let group;
+      let round;
 
-      var margin = {top: 10, right: 10, bottom: 20, left: 10},
-          x,
-          y = d3.scale.linear().range([100, 0]),
-          id = barChart.id++,
-          axis = d3.svg.axis().orient("bottom"),
-          brush = d3.svg.brush(),
-          brushDirty,
-          dimension,
-          group,
-          round;
+
+        if (barChart.id === 1) {
+          axis = d3.svg.axis().orient('bottom').tickFormat(d => {
+            if (d === 0){
+              return `12AM`;
+            }
+            else if(d < 12){
+              return `${d}AM`;
+            }else if(d === 12){
+              d = d +'PM'
+            }else if(d === 24){
+              d = 12 + 'AM';
+            }else{
+              d = d - 12 +'PM'
+            }
+            return d;
+          });
+        }
+
+
+      /**
+       * If barchart.id is 2, that means it is the week day chart.
+       * Set x-axis for weekday chart to have the days of the week instead of numbers
+       */
+      if (barChart.id === 2) {
+        axis = d3.svg.axis().orient('bottom').tickFormat((d) => {
+          if (!weekdays[d]) {
+            return '';
+          }
+          return weekdays[d].slice(0, 1).toUpperCase() + weekdays[d].slice(1, 3);
+        });
+      }
 
       function chart(div) {
-        var width = x.range()[1],
-            height = y.range()[0];
+        let width = x.range()[1];
+        const height = y.range()[0];
+        // if scale is ordinal, adjust width accordingly
+        if (x.range().length > 2) {
+          width = x.range()[x.range().length - 1];
+        }
 
         y.domain([0, group.top(1)[0].value]);
 
-        div.each(function() {
-          var div = d3.select(this),
-              g = div.select("g");
+        div.each(function () {
+          let div = d3.select(this),
+            g = div.select('g');
 
           // Create the skeletal chart.
           if (g.empty()) {
-            div.select(".title").append("a")
-                .attr("href", "javascript:reset(" + id + ")")
-                .attr("class", "reset")
-                .text("reset")
-                .style("display", "none");
+            div.select('.title').append('a')
+                .attr('href', 'javascript:reset(' + id + ')')
+                .attr('class', 'reset')
+                .text('reset')
+                .style('display', 'none');
 
-            g = div.append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            g = div.append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+              .append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-            g.append("clipPath")
-                .attr("id", "clip-" + id)
-              .append("rect")
-                .attr("width", width)
-                .attr("height", height);
+            g.append('clipPath')
+                .attr('id', 'clip-' + id)
+              .append('rect')
+                .attr('width', width)
+                .attr('height', height);
 
-            g.selectAll(".bar")
-                .data(["background", "foreground"])
-              .enter().append("path")
-                .attr("class", function(d) { return d + " bar"; })
+            g.selectAll('.bar')
+                .data(['background', 'foreground'])
+              .enter().append('path')
+                .attr('class', d =>  d + ' bar')
                 .datum(group.all());
 
-            g.selectAll(".foreground.bar")
-                .attr("clip-path", "url(#clip-" + id + ")");
+            g.selectAll('.foreground.bar')
+                .attr('clip-path', 'url(#clip-' + id + ')');
 
-            g.append("g")
-                .attr("class", "axis")
-                .attr("transform", "translate(0," + height + ")")
+            g.append('g')
+                .attr('class', 'axis')
+                .attr('transform', 'translate(0,' + height + ')')
                 .call(axis);
 
             // Initialize the brush component with pretty resize handles.
-            var gBrush = g.append("g").attr("class", "brush").call(brush);
-            gBrush.selectAll("rect").attr("height", height);
-            gBrush.selectAll(".resize").append("path").attr("d", resizePath);
+            const gBrush = g.append('g').attr('class', 'brush').call(brush);
+            gBrush.selectAll('rect').attr('height', height);
+            gBrush.selectAll('.resize').append('path').attr('d', resizePath);
           }
 
           // Only redraw the brush if set externally.
           if (brushDirty) {
             brushDirty = false;
-            g.selectAll(".brush").call(brush);
-            div.select(".title a").style("display", brush.empty() ? "none" : null);
+            g.selectAll('.brush').call(brush);
+            div.select('.title a').style('display', brush.empty() ? 'none' : null);
             if (brush.empty()) {
-              g.selectAll("#clip-" + id + " rect")
-                  .attr("x", 0)
-                  .attr("width", width);
+              g.selectAll('#clip-' + id + ' rect')
+                  .attr('x', 0)
+                  .attr('width', width);
             } else {
-              var extent = brush.extent();
-              g.selectAll("#clip-" + id + " rect")
-                  .attr("x", x(extent[0]))
-                  .attr("width", x(extent[1]) - x(extent[0]));
+              const extent = brush.extent();
+              g.selectAll('#clip-' + id + ' rect')
+                  .attr('x', x(extent[0]))
+                  .attr('width', x(extent[1]) - x(extent[0]));
             }
           }
 
-          g.selectAll(".bar").attr("d", barPath);
+          g.selectAll('.bar').attr('d', barPath);
         });
 
         function barPath(groups) {
-          var path = [],
-              i = -1,
-              n = groups.length,
-              d;
+          let path = [],
+            i = -1,
+            n = groups.length,
+            d;
           while (++i < n) {
             d = groups[i];
-            path.push("M", x(d.key), ",", height, "V", y(d.value), "h9V", height);
+            path.push('M', x(d.key), ',', height, 'V', y(d.value), 'h9V', height);
           }
-          return path.join("");
+          return path.join('');
         }
 
         function resizePath(d) {
-          var e = +(d == "e"),
-              x = e ? 1 : -1,
-              y = height / 3;
-          return "M" + (.5 * x) + "," + y
-              + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
-              + "V" + (2 * y - 6)
-              + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y)
-              + "Z"
-              + "M" + (2.5 * x) + "," + (y + 8)
-              + "V" + (2 * y - 8)
-              + "M" + (4.5 * x) + "," + (y + 8)
-              + "V" + (2 * y - 8);
+          let e = +(d == 'e'),
+            x = e ? 1 : -1,
+            y = height / 3;
+          return 'M' + (0.5 * x) + ',' + y
+              + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
+              + 'V' + (2 * y - 6)
+              + 'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y)
+              + 'Z'
+              + 'M' + (2.5 * x) + ',' + (y + 8)
+              + 'V' + (2 * y - 8)
+              + 'M' + (4.5 * x) + ',' + (y + 8)
+              + 'V' + (2 * y - 8);
         }
       }// End of chart function
 
-      brush.on("brushstart.chart", function() {
-        var div = d3.select(this.parentNode.parentNode.parentNode);
-        div.select(".title a").style("display", null);
+      brush.on('brushstart.chart', function () {
+        const div = d3.select(this.parentNode.parentNode.parentNode);
+        div.select('.title a').style('display', null);
       });
 
-      brush.on("brush.chart", function() {
-        var g = d3.select(this.parentNode),
-            extent = brush.extent();
-        if (round) g.select(".brush")
+      brush.on('brush.chart', function () {
+        let g = d3.select(this.parentNode),
+          extent = brush.extent();
+        if (round) g.select('.brush')
             .call(brush.extent(extent = extent.map(round)))
-          .selectAll(".resize")
-            .style("display", null);
-        g.select("#clip-" + id + " rect")
-            .attr("x", x(extent[0]))
-            .attr("width", x(extent[1]) - x(extent[0]));
+          .selectAll('.resize')
+            .style('display', null);
+        g.select('#clip-' + id + ' rect')
+            .attr('x', x(extent[0]))
+            .attr('width', x(extent[1]) - x(extent[0]));
         dimension.filterRange(extent);
       });
 
-      brush.on("brushend.chart", function() {
+      brush.on('brushend.chart', function () {
         if (brush.empty()) {
-          var div = d3.select(this.parentNode.parentNode.parentNode);
-          div.select(".title a").style("display", "none");
-          div.select("#clip-" + id + " rect").attr("x", null).attr("width", "100%");
+          const div = d3.select(this.parentNode.parentNode.parentNode);
+          div.select('.title a').style('display', 'none');
+          div.select('#clip-' + id + ' rect').attr('x', null).attr('width', '100%');
           dimension.filterAll();
         }
       });
 
-      chart.margin = function(_) {
+      chart.margin = function (_) {
         if (!arguments.length) return margin;
         margin = _;
         return chart;
       };
 
-      chart.x = function(_) {
+      chart.x = function (_) {
         if (!arguments.length) return x;
         x = _;
         axis.scale(x);
@@ -360,19 +392,19 @@ class CrossfilterChart extends Component {
         return chart;
       };
 
-      chart.y = function(_) {
+      chart.y = function (_) {
         if (!arguments.length) return y;
         y = _;
         return chart;
       };
 
-      chart.dimension = function(_) {
+      chart.dimension = function (_) {
         if (!arguments.length) return dimension;
         dimension = _;
         return chart;
       };
 
-      chart.filter = function(_) {
+      chart.filter = function (_) {
         if (_) {
           brush.extent(_);
           dimension.filterRange(_);
@@ -384,19 +416,19 @@ class CrossfilterChart extends Component {
         return chart;
       };
 
-      chart.group = function(_) {
+      chart.group = function (_) {
         if (!arguments.length) return group;
         group = _;
         return chart;
       };
 
-      chart.round = function(_) {
+      chart.round = function (_) {
         if (!arguments.length) return round;
         round = _;
         return chart;
       };
 
-      return d3.rebind(chart, brush, "on");
+      return d3.rebind(chart, brush, 'on');
     }// End of barChart function
 
     /**

@@ -1,11 +1,12 @@
-var path = require('path');
+const path = require('path');
+
 module.exports = {
   entry: [
     path.join(__dirname, '/src/index.js'),
   ],
   devtool: 'source-map',
   output: {
-    path: path.join(__dirname, 'build') ,
+    path: path.join(__dirname, 'build'),
     publicPath: '/build',
     filename: 'bundle.js',
   },
@@ -18,5 +19,5 @@ module.exports = {
         presets: ['react', 'es2017', 'stage-0'],
       },
     }],
-  }
+  },
 };

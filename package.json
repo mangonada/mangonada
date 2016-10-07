@@ -10,7 +10,7 @@
     "test:watch": "npm run test -- --watch",
     "postinstall": "webpack -p",
     "json-server": "json-server -f server/mock-database.json -p 5000",
-    "lint": "eslint *.js --fix"
+    "lint": "eslint src/containers/chart.js --fix"
   },
   "engines": {
     "node": "6.4.0"
