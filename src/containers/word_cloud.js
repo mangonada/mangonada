@@ -117,6 +117,7 @@ class WordCloud extends Component {
       }
       layout.stop().words(words).start();
     }
+
     // If window resizes and wordcloud is not hidden, update the svg
     // May need to refactor to resize on switching tabs
     window.onresize = event => {
