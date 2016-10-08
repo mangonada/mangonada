@@ -101,7 +101,7 @@ class WordCloud extends Component {
 
       // Entering and existing words
       cloud.transition()
-           .duration(600)
+           .duration(200)
            .style('font-size', d => `${d.size}px`)
            .attr('transform', d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
            .style('fill-opacity', 1);
@@ -117,9 +117,12 @@ class WordCloud extends Component {
       }
       layout.stop().words(words).start();
     }
-    // If window resizes, update the svg
-    window.onresize = function(event) {
-      update();
+    // If window resizes and wordcloud is not hidden, update the svg
+    // May need to refactor to resize on switching tabs
+    window.onresize = event => {
+      if (!$('#word-cloud').hasClass('hidden')) {
+        update();
+      }
     };
     update();
   }
