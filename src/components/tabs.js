@@ -7,64 +7,84 @@ import Timeline from 'material-ui/svg-icons/action/timeline';
 import Equalizer from 'material-ui/svg-icons/av/equalizer';
 import FormatQuote from 'material-ui/svg-icons/editor/format-quote';
 import Bubbles from 'material-ui/svg-icons/editor/bubble-chart';
+import Team from 'material-ui/svg-icons/social/people';
 import $ from 'jquery';
 
-function enterTab(elementId) {
-  console.log('get ' + elementId);
+export default class NavTabs extends Component {
 
-  d3.selectAll('.d3-tip')
+  constructor(props) {
+    super(props);
+    this.enterTab = this.enterTab.bind(this);
+    this.getGitGraph = this.getGitGraph.bind(this);
+    this.getStats = this.getStats.bind(this);
+    this.getWordCloud = this.getWordCloud.bind(this);
+    this.getBubbleChart = this.getBubbleChart.bind(this);
+  }
+
+  enterTab(elementId) {
+    console.log('get ' + elementId);
+
+    d3.selectAll('.d3-tip')
     .style('opacity', 0)
     .html('');
 
-  document.getElementById('stats').className="hidden";
-  document.getElementById('word-cloud').className="hidden";
-  document.getElementById('container').className="hidden";
-  document.getElementById('bubble-chart').className="hidden";
+    const elements = ['stats', 'word-cloud', 'container', 'bubble-chart'];
 
-  document.getElementById(elementId).classList.remove("hidden");
-  $('body').css('overflow', 'hidden');
-}
+    elements.map((element) => { console.log(element); document.getElementById(element).className = "hidden"; } );
 
-export default class NavTabs extends Component {
+    document.getElementById(elementId).classList.remove("hidden");
+    $('body').css('overflow', 'hidden');
+  }
+
   getGitGraph(){
-    enterTab('container');
+    this.enterTab('container');
   }
 
   getStats(){
-    enterTab('stats');
+    this.enterTab('stats');
     $('body').css('overflow', 'visible');
   }
 
   getWordCloud(){
-    enterTab('word-cloud');
+    this.enterTab('word-cloud');
   }
 
   getBubbleChart(){
-    enterTab('bubble-chart');
+    this.enterTab('bubble-chart');
   }
 
-  render (){
+  getAboutUs(){
+    window.location.href = 'http://localhost:3000/about';
+  }
+
+  render() {
+    const style = { padding: '10px' };
     return (
       <Tabs inkBarStyle={{background: 'none'}}>
       <Tab
         icon={<Timeline />}
-        style={{padding: 5}}
+        style={style}
         onActive={this.getGitGraph} >
       </Tab>
       <Tab
         icon={<Equalizer />}
-        style={{padding: 5}}
+        style={style}
         onActive={this.getStats} >
       </Tab>
       <Tab
         icon={<FormatQuote />}
-        style={{padding: 5}}
+        style={style}
         onActive={this.getWordCloud} >
       </Tab>
       <Tab
         icon={<Bubbles />}
-        style={{padding: 5}}
+        style={style}
         onActive={this.getBubbleChart} >
+      </Tab>
+      <Tab
+        icon={<Team />}
+        style={style}
+        onActive={this.getAboutUs} >
       </Tab>
     </Tabs>
   )}

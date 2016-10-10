@@ -1,10 +1,14 @@
 /**
- * TO DO :
- * Update CSS names
- * Add starting and ending date near the date chart.
- * Add overflow for commit list
- * Make CSS values % instead of px
+
+ * This is the container that displays the hour chart, weekday chart, date chart and commit list.
+ * It needs access to the redux state to receive the commit data returned from the api call.
+ * Does not need to dispatch to the redux state.
+ *
+ * While this is a container, React is not actually being used to manipulate the
+ * DOM here. We simply call a function that will directly go to our canvas and
+ * draw on it, bypassing React.
  */
+
 /* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -15,30 +19,39 @@ class CrossfilterChart extends Component {
   makeCrossfilterChart() {
     $('#stats').empty();
     $('#stats').html(`
-      <div id="charts">
-        <span id="hour-chart" class="chart">
-          <div class="title">Time of Day</div>
-        </span>
-        <span id="delay-chart" class="chart">
-          <div class="title">Week Day</div>
-        </span>
-        <span id="date-chart" class="chart">
-          <div class="title">Date</div>
-        </span>
-      </div>
-      <aside id="totals">
-        <span id="active">-</span> of <span id="total">-</span> commits selected.
-      </aside>
-      <div id="lists">
-        <div id="flight-list" class="list"></div>
-      </div>`);
+        <div id="charts" class="container">
+          <div class ="row">
+            <div class="col-lg-2">
+            </div>
+            <div id="weekday-chart" class="chart col-lg-3 col-sm-10">
+            <div class="title">Weekday</div>
+            </div>
+            <div id="hour-chart" class= "chart col-lg-5 col-sm-10">
+              <div class="title">Time of Day</div>
+            </div>
+          </div>
+          <div class="row">
+            <div id="date-chart" class="chart col-md-12 col-sm-10">
+              <div class="title">Date</div>
+            </div>
+          </div>
+        </div>
+        <div class ="row">
+          <aside id="totals" class="col-xs-12">
+          <span id="active">-</span> of <span id="total">-</span> commits selected.
+          </aside>
+        </div>
+        <div id="lists">
+          <div id="commit-list" class="list"></div>
+        </div>`);
     /*
+
+
     NEED TO FIX, JSON commits are being placed in order in api.js. but sample data is not in order
 
     So in this code, initial state of sample json works and next api calls dont works,
     or initial state doesnt work and next api calls work.
 
-    also, check value vs reference issues?
      */
 
     const JSONCommits = this.props.currentRepo.JSONCommits.slice();
@@ -59,15 +72,13 @@ class CrossfilterChart extends Component {
     const quarterMark = Math.floor(timeBetween / 4);
     const filterStart = new Date(startDate.getTime() + quarterMark);
     const filterEnd = new Date(endDate.getTime() - quarterMark);
-
     const commits = JSONCommits;
       // Various formatters.
     const formatNumber = d3.format(',d');
-    // const formatChange = d3.format('+,d');
     const formatDate = d3.time.format('%A, %B %d, %Y');
     const formatTime = d3.time.format('%I:%M %p');
 
-    // A nest operator, for grouping the flight list.
+    // A nest operator, for grouping the commit list.
     const nestByDate = d3.nest().key(d => d3.time.day(d.date));
 
     // Create array of weekdays to store in d.words property of commits
@@ -93,32 +104,63 @@ class CrossfilterChart extends Component {
     const day = commit.dimension(d => d.date.getDay());
     const days = day.group(d => d);
     const word = commit.dimension(d => d.words);
+    let charts;
+    let mobileView = ($(window).width() < 960);
+    // If viewed on mobile, make chart width smaller
+    if (mobileView) {
+      charts = [
+        barChart()
+        .dimension(day)
+        .group(days)
+        .x(d3.scale.linear()
+        // Domain starts at -1 and ends at 7 to add extra tick as padding on the sides
+        .domain([-1, 7])
+        .rangeRound([0, 30 * 7])),
+        barChart()
+            .dimension(hour)
+            .group(hours)
+            .x(d3.scale.linear()
+              .domain([0, 24])
+              .rangeRound([0, 15 * 24])),
+        barChart()
+            .dimension(date)
+            .group(dates)
+            .x(d3.time.scale()
+            // x-axis label of the chart
+              .domain([startDate, endDate])
+            // The range of the chart, how wide it is
+              .rangeRound([0, 10 * 36]))
+            // Filter is the part of barChart that is selected
+            .filter([filterStart, filterEnd]),
+      ];
+    }else {
+      charts = [
+        barChart()
+        .dimension(day)
+        .group(days)
+        .x(d3.scale.linear()
+        // Domain starts at -1 and ends at 7 to add extra tick as padding on the sides
+        .domain([-1, 7])
+        .rangeRound([0, 30 * 7])),
+        barChart()
+            .dimension(hour)
+            .group(hours)
+            .x(d3.scale.linear()
+              .domain([0, 24])
+              .rangeRound([0, 18 * 24])),
 
-    const charts = [
-      barChart()
-          .dimension(hour)
-          .group(hours)
-          .x(d3.scale.linear()
-            .domain([0, 24])
-            .rangeRound([0, 18 * 24])),
-      barChart()
-          .dimension(day)
-          .group(days)
-          .x(d3.scale.linear()
-            // Domain starts at -1 and ends at 7 to add extra tick as padding on the sides
-            .domain([-1, 7])
-            .rangeRound([0, 30 * 7])),
-      barChart()
-          .dimension(date)
-          .group(dates)
-          .x(d3.time.scale()
-          // x-axis label of the chart
-            .domain([startDate, endDate])
-          // The range of the chart, how wide it is
-            .rangeRound([0, 10 * 80]))
-          // Filter is the part of barChart that is selected
-          .filter([filterStart, filterEnd]),
-    ];
+        barChart()
+            .dimension(date)
+            .group(dates)
+            .x(d3.time.scale()
+            // x-axis label of the chart
+              .domain([startDate, endDate])
+            // The range of the chart, how wide it is
+              .rangeRound([0, 18 * 36]))
+            // Filter is the part of barChart that is selected
+            .filter([filterStart, filterEnd]),
+      ];
+    }
 
     // Given our array of charts, which we assume are in the same order as the
     // .chart elements in the DOM, bind the charts to the DOM and render them.
@@ -166,39 +208,43 @@ class CrossfilterChart extends Component {
             .data(commitsByDate, d => d.key);
 
         date.enter().append('div')
-            .attr('class', 'date')
-          .append('div')
+            .attr('class', 'date container')
+          .append('span')
             .attr('class', 'day')
             // appends first date to top of list "Feburary 28, 2001"
             .text(d => formatDate(d.values[0].date));
 
         date.exit().remove();
 
-        const commit = date.order().selectAll('.flight')
+        const commitItem = date.order().selectAll('.commit')
             .data(d => d.values, d => d.index);
 
-        const commitEnter = commit.enter().append('div')
-            .attr('class', 'flight');
+        const commitEnter = commitItem.enter().append('div')
+            .attr('class', 'commit row');
 
         // This is where they append data to divs
         commitEnter.append('div')
-            .attr('class', 'time')
-            .text(d => formatTime(d.date));
+            .attr('class', 'time col-md-1 col-xs-3')
+            .text(d => {
+              let result = formatTime(d.date);
+              // Remove beginning 0 if there is a 0 in front of the hours
+              return result = result[0] === "0" ? result.slice(1) : result;
+            });
 
         commitEnter.append('div')
-            .attr('class', 'origin')
+            .attr('class', 'author col-md-2 col-xs-3')
             .text(d => d.author.login);
 
         commitEnter.append('div')
-            .attr('class', 'destination')
-            .html(d => `<pre>SHA: <a href="${d.html_url}" target="_blank">${d.sha.slice(0, 9)}...</a></pre>`);
+            .attr('class', 'sha-link col-md-2 col-xs-6')
+            .html(d => `<span>SHA: <a href="${d.html_url}" target="_blank">${d.sha.slice(0, 9)}...</a></span>`);
 
         commitEnter.append('div')
-            .attr('class', 'delay')
+            .attr('class', 'commit-message col-md-7 col-xs-12')
             .text(d => d.commit.message);
 
-        commit.exit().remove();
-        commit.order();
+        commitItem.exit().remove();
+        commitItem.order();
       });
     } // End of commitList function
 
@@ -230,24 +276,39 @@ class CrossfilterChart extends Component {
       let round;
 
       /**
-       * If barchart.id is 1, it is the hourly chart
-       * Change x-axis for hourly chart to have AM/PM time instead of military time
-       */
+      * If barchart.id is 1, it is the week day chart.
+      * Change x-axis for weekday chart to have the days of the week instead of numbers
+      */
       if (barChart.id === 1) {
-        axis = d3.svg.axis().orient('bottom').tickFormat(d => {
-          return convertTime(d);
-        });
-      }
-      /**
-       * If barchart.id is 2, it is the week day chart.
-       * Change x-axis for weekday chart to have the days of the week instead of numbers
-       */
-      if (barChart.id === 2) {
         axis = d3.svg.axis().orient('bottom').tickFormat((d) => {
           if (!weekdays[d]) {
             return '';
           }
           return weekdays[d].slice(0, 1).toUpperCase() + weekdays[d].slice(1, 3);
+        });
+      }
+      /**
+       * If barchart.id is 2, it is the hourly chart
+       * Change x-axis for hourly chart to have AM/PM time instead of military time
+       */
+      if (barChart.id === 2) {
+        axis = d3.svg.axis().orient('bottom').tickFormat(d => {
+          return convertTime(d);
+        });
+      }
+      /**
+      * If barchart.id is 3, it is the date chart
+      * Change x-axis for date chart to display date in Mon date
+      * If viewing on mobile, make every other tick on x-axis to be blank for spacing
+      */
+      if (barChart.id === 3) {
+        let count = 0;
+        axis = d3.svg.axis().orient('bottom').tickFormat(d => {
+          count++;
+          if (!mobileView || count % 2 === 1){
+            return `${d.toString().slice(4,7)} ${d.getDate()}`;
+          }
+          return '';
         });
       }
 

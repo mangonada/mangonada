@@ -14,18 +14,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import GithubApiInterface from '../reducers/gitD3/githubBranchFunction';
-import tooltip from '../reducers/gitD3/d3tip.js';
 import _  from 'lodash';
 import $ from 'jquery';
 import displayHelpers from './display_helpers';
 import generateCoordinates from './coordinate_generator';
-
-d3.tip = tooltip;
+import { floatingTooltip, showDetail } from './tooltip_helpers'
 
 class RepoDisplay extends Component {
+
   makeD3Display () {
     $('#container').empty();
-    $('.d3-tip').remove();
 
     const pageWidth = window.innerWidth;
     const pageHeight = window.innerHeight;
@@ -44,48 +42,26 @@ class RepoDisplay extends Component {
     } = githubTranslator;
 
     const {
-      showToolTip,
-      makeAnchor,
       zoomed,
       renderRepoName,
       addColors,
       addDates,
     } = displayHelpers;
 
+    const tooltip = floatingTooltip('container_tooltip', 100, '#container');
+
     addColors(branchLookup);
     generateCoordinates(d3commits, SHALookup, branchLookup);
 
-    //http://bl.ocks.org/Caged/6476579
-    const infoTip = d3.tip()
-      .attr('class', 'd3-tip')
-      .direction('s')
-      .offset([10, 0]);
-
-    const totalCommits = d3commits.length;
-    const largeLimit = 10;
-    let smallLimit;
-    if(totalCommits < 500) smallLimit = 0.1;
-    else if (totalCommits < 1000) smallLimit = 0.05;
-    else if (totalCommits < 2000) smallLimit = 0.25;
-    else smallLimit = 0.01;
-    const zoomLimit = [smallLimit, largeLimit];
-
     //https://bl.ocks.org/mbostock/6123708
     const zoom = d3.behavior.zoom()
-      .scaleExtent(zoomLimit)
-      .on("zoom", () => zoomed(svg));
+      .scaleExtent([0.1, 10])
+      .on("zoom", () => zoomed(svg, tooltip));
 
     let svg = d3.select('#container').append('svg')
       .attr('width', pageWidth)
       .attr('height', pageHeight)
-      .on('click', function() {
-        d3.selectAll('.d3-tip')
-          .style('opacity', 0)
-          .html('');
-      })
       .call(zoom);
-
-    svg.call(infoTip);
 
     let container = svg.append('g');
     const straightLineLocations = [];
@@ -115,11 +91,17 @@ class RepoDisplay extends Component {
               .attr("stroke-width", 1)
             .attr('stroke', branchLookup[commit.branch].color)
             .attr('fill', 'none');
-        } catch(err) {
+        }
+        catch(err) {
           console.log(err);
         }
       });
     });
+
+    function nodeColor(commit) {
+      return branchLookup[commit.branch] ?
+        branchLookup[commit.branch].color : '#000000';
+    }
 
     //Make the nodes
     const nodes = svg.append('g')
@@ -130,11 +112,14 @@ class RepoDisplay extends Component {
       .attr('r', 5)
       .attr('cx', commit => commit.x)
       .attr('cy', commit => commit.y)
-      .attr('stroke', commit => branchLookup[commit.branch].color)
-      .attr('fill', commit => branchLookup[commit.branch].color);
+      .attr('stroke', nodeColor)
+      .attr('fill', nodeColor);
 
     //show the tool on hover
-    nodes.on('mouseover', node => showToolTip(node, originalBranches, infoTip));
+    nodes.on('mouseover', function(d){
+      // tooltipOnNode = true;
+      showDetail(d, originalBranches, tooltip);
+    });
 
     const highestNode = d3commits.reduce((highest, commit) => {
       return commit.y < highest ? commit : highest;
@@ -146,7 +131,6 @@ class RepoDisplay extends Component {
 
 
   render() {
-    
     $('#loading').addClass('hidden');
 
     return (
@@ -161,12 +145,4 @@ function mapStateToProps(state) {
   return { currentRepo: state.currentRepo };
 }
 
-//anything returned from this fn will end up as props
-//on RepoDisplay container
-// function mapDispatchToProps(dispatch) {
-//   //whenever updateNode is called, the result should be passed
-//   //to all of our reducers
-//   return bindActionCreators({ updateNode }, dispatch);
-// }
-
-export default connect(mapStateToProps /*, mapDispatchToProps*/)(RepoDisplay);
+export default connect(mapStateToProps)(RepoDisplay);

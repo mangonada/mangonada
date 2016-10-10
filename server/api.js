@@ -59,6 +59,15 @@ router.route('/repos/:userName/:repoName')
                             repo : data.repo,
                             JSONBranches : data.branches,
                             JSONCommits : data.commits };
+           const commitTable = {};
+           const missingShaTable = {};
+           data.commits.map((commit) => { commitTable[commit.sha] = commit; });
+           data.commits.map((commit) => { commit.parents.map((parent) => {
+             if (commitTable[parent.sha] === undefined) {
+               missingShaTable[parent.sha] = parent.sha;
+             }
+           }); });
+           console.log("mongo db has missing commit", Object.keys(missingShaTable));
            res.status(200).json(packet);
            return;
          }

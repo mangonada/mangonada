@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * display_helpers.js
  *
@@ -11,23 +12,16 @@
  * @param  {String} site - the site to link to
  * @return {String} - the anchor HTML element
  */
-function makeAnchor(linkedText, site) {
-  return `<a href="${site}" target="_blank">${linkedText}</a>`;
-}
 
 //https://bl.ocks.org/mbostock/6123708
-function zoomed(svg) {
+function zoomed(svg, tooltip) {
   const { translate, scale } = d3.event;
   const translation = `translate(${translate})scale(${scale})`;
   svg.selectAll('g').attr("transform", translation);
   svg.selectAll('line').attr("transform", translation);
   svg.selectAll('text').attr("transform", translation);
 
-  //To make the tip essentially disappear from the page we remove its HTML.
-  //It is still present on the page, but now consists of a tiny invisible square.
-  d3.selectAll('.d3-tip')
-    .style('opacity', 0)
-    .html('');
+  tooltip.hideTooltip();
 }
 
 //give each branch a different color property
@@ -61,27 +55,7 @@ function startLoadAnimation() {
     });
 }
 
-const getCommitDate = commit => ('' + new Date(commit.commit.committer.date)).slice(0, 16);
-
-function showToolTip(commit, originalBranches, tooltip) {
-  const { branch, sha, html_url: url, author: { login: authorName } } = commit;
-  const repoName = url.match(/\/\/[\w\.]*\/[\w\.]*\/(\w*)\//);
-  const date = getCommitDate(commit);
-
-  //the ternary operator below: if the branch name is not fake (e.g. master, dev, etc.)
-  //then make it a hyperlink; otherwise, don't display branch name
-  const branchLink = `https://github.com/${authorName}/${repoName[1]}/commits/${branch}`;
-
-  const tooltipContent =
-`Date:   ${date}
-${originalBranches.includes(branch) ? 'Branch: ' + makeAnchor(branch, branchLink) + '\n' : '' }SHA:    ${makeAnchor(sha.slice(0, 9) + '...', url)}
-Author: ${authorName}
-
-Message: ${commit.commit.message}`;
-
-  tooltip.html(`<pre>${tooltipContent}</pre>`);
-  tooltip.show();
-}
+const getCommitDateLine = commit => ('' + new Date(commit.commit.committer.date)).slice(0, 16);
 
 function addDates(svg, commits, lowestY) {
   const xOffset = 30;
@@ -94,7 +68,7 @@ function addDates(svg, commits, lowestY) {
 
   commits.forEach(commit => {
     const dateObj = new Date(commit.commit.committer.date);
-    const dateStr = getCommitDate(commit);
+    const dateStr = getCommitDateLine(commit);
     if(lastSunday === dateObj) return;
 
     //if sunday or it's been over a week
@@ -150,10 +124,8 @@ function renderRepoName(firstCommit, svg) {
 
 export default {
   renderRepoName,
-  makeAnchor,
   zoomed,
   addColors,
   startLoadAnimation,
-  showToolTip,
-  addDates
+  addDates,
 };
