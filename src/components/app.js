@@ -1,7 +1,7 @@
 /* eslint-disable */
 /**
  * The top-most component. Does not do anything except render
- * the different divs.
+ * SearchBar and RepoDisplay.
  */
 
 import React, { Component } from 'react';

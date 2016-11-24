@@ -1,0 +1,11 @@
+{
+  "name": "mangonada",
+  "description": "",
+  "main": "",
+  "authors": [],
+  "license": "MIT",
+  "homepage": "https://github.com/mangonada/mangonada",
+  "dependencies": {
+    "gitgraph.js": "^1.4.0"
+  }
+}

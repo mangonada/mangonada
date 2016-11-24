@@ -1,10 +1,4 @@
 /* eslint-disable */
-
-/**
- * src/components/tabs.js
- *
- * Contains the logic for switching between the different displays.
- */
 import React, { Component } from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import RepoDisplay from '../containers/repo_display';
@@ -13,84 +7,64 @@ import Timeline from 'material-ui/svg-icons/action/timeline';
 import Equalizer from 'material-ui/svg-icons/av/equalizer';
 import FormatQuote from 'material-ui/svg-icons/editor/format-quote';
 import Bubbles from 'material-ui/svg-icons/editor/bubble-chart';
-import Team from 'material-ui/svg-icons/social/people';
 import $ from 'jquery';
 
-export default class NavTabs extends Component {
+function enterTab(elementId) {
+  console.log('get ' + elementId);
 
-  constructor(props) {
-    super(props);
-    this.enterTab = this.enterTab.bind(this);
-    this.getGitGraph = this.getGitGraph.bind(this);
-    this.getStats = this.getStats.bind(this);
-    this.getWordCloud = this.getWordCloud.bind(this);
-    this.getBubbleChart = this.getBubbleChart.bind(this);
-  }
-
-  enterTab(elementId) {
-    console.log('get ' + elementId);
-
-    d3.selectAll('.d3-tip')
+  d3.selectAll('.d3-tip')
     .style('opacity', 0)
     .html('');
 
-    const elements = ['stats', 'word-cloud', 'container', 'bubble-chart'];
+  document.getElementById('stats').className="hidden";
+  document.getElementById('word-cloud').className="hidden";
+  document.getElementById('container').className="hidden";
+  document.getElementById('bubble-chart').className="hidden";
 
-    elements.map((element) => { console.log(element); document.getElementById(element).className = "hidden"; } );
+  document.getElementById(elementId).classList.remove("hidden");
+  $('body').css('overflow', 'hidden');
+}
 
-    document.getElementById(elementId).classList.remove("hidden");
-    $('body').css('overflow', 'hidden');
-  }
-
+export default class NavTabs extends Component {
   getGitGraph(){
-    this.enterTab('container');
+    enterTab('container');
   }
 
   getStats(){
-    this.enterTab('stats');
+    enterTab('stats');
     $('body').css('overflow', 'visible');
   }
 
   getWordCloud(){
-    this.enterTab('word-cloud');
+    enterTab('word-cloud');
   }
 
   getBubbleChart(){
-    this.enterTab('bubble-chart');
+    enterTab('bubble-chart');
   }
 
-  getAboutUs(){
-    window.location.href = 'http://gitcentral.com/about';
-  }
-
-  render() {
-    const style = { padding: '10px' };
+  render (){
     return (
       <Tabs inkBarStyle={{background: 'none'}}>
       <Tab
         icon={<Timeline />}
-        style={style}
+        style={{padding: 5}}
         onActive={this.getGitGraph} >
       </Tab>
       <Tab
         icon={<Equalizer />}
-        style={style}
+        style={{padding: 5}}
         onActive={this.getStats} >
       </Tab>
       <Tab
         icon={<FormatQuote />}
-        style={style}
+        style={{padding: 5}}
         onActive={this.getWordCloud} >
       </Tab>
       <Tab
         icon={<Bubbles />}
-        style={style}
+        style={{padding: 5}}
         onActive={this.getBubbleChart} >
-      </Tab>
-      <Tab
-        icon={<Team />}
-        style={style}
-        onActive={this.getAboutUs} >
       </Tab>
     </Tabs>
   )}

@@ -16,8 +16,8 @@ class WordCloud extends Component {
 
   makeWordCloud() {
     $('#word-cloud').empty();
-    let w = window.innerWidth;
-    let h = window.innerHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
     // create single string consisting of all words in commit messages
     let words = this.props.currentRepo.JSONCommits.reduce((currentString, word) => {
@@ -27,14 +27,10 @@ class WordCloud extends Component {
     // Replace punctuation with spaces
     words = words.replace(/\d|\W/g, ' ').split(' ')
 
-    // Count frequency of each word.
-    // Create new array of non duplicates and words with length of 3 or more
+    // Count frequency of each word and create new array of non duplicates
     const frequencyCount = {};
     const uniqueWords = [];
     words.forEach((word) => {
-      if (word.length < 3) {
-        return;
-      }
       if (frequencyCount[word] === undefined) {
         frequencyCount[word] = 0;
         uniqueWords.push(word);
@@ -43,7 +39,7 @@ class WordCloud extends Component {
     });
     // Create array with text and frequencyCount as properties
     words = uniqueWords.map((d) => {
-      return { text: d, size: (frequencyCount[d]) + 30 };
+      return { text: d, size: (frequencyCount[d]) + 20 };
     });
     // Sort words in descending size order
     words = words.sort((a, b) => {
@@ -56,83 +52,49 @@ class WordCloud extends Component {
     });
 
     // Scale of colors for words
-    // Can choose from d3.scale.category20(),d3.scale.category20c(),d3.scale.category20b()
+    // can choose from d3.scale.category20(),d3.scale.category20c(),d3.scale.category20b()
     const fill = d3.scale.category20c();
 
+    // Construct the word cloud's SVG element
+    const svg = d3.select('#word-cloud')
+                  .append('svg')
+                  .attr('width', w)
+                  .attr('height', h)
+                  .append('g')
+                  .attr('transform', `translate(${[w >> 1, h >> 1]})`);
+
+
+    // Draw the word cloud
+    function draw(words) {
+      const cloud = svg.selectAll('g text')
+                       .data(words, d => d.text);
+
+      // Entering words
+      cloud.enter()
+           .append('text')
+           .style('font-family', 'Impact')
+           .style('fill', (d, i) => fill(i))
+           .attr('text-anchor', 'middle')
+           .attr('font-size', 1)
+           .text(d => d.text);
+
+      // Entering and existing words
+      cloud.transition()
+           .duration(600)
+           .style('font-size', d => `${d.size}px`)
+           .attr('transform', d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
+           .style('fill-opacity', 1);
+    }
     // Start word cloud placement
-    const layout = d3.layout.cloud().size([w * 0.90, h * 0.72])
+    d3.layout.cloud().size([w * 0.90, h * 0.70])
                      .words(words)
                     //  .rotate(() => ~~((Math.random() * 6) - 2.5) * 30)
                      .rotate(() => 0)
                      .text(d => d.text)
                      .font('Impact')
                      .fontSize(d => d.size)
-                     .on('end', draw);
-
-    // Construct the word cloud's SVG element
-    const svg = d3.select('#word-cloud')
-                  .append('svg')
-                  .attr('width', w)
-                  .attr('height', h);
-    const vis = svg.append('g')
-                  .attr('transform', `translate(${[w >> 1, h >> 1]})`);
-
-
-    // Draw the word cloud
-    function draw(words, bounds) {
-      // Calculates width, height and scale of svg based off of window size
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      svg.attr('width', w).attr('height', h);
-      const scale = bounds ? Math.min(
-      w / Math.abs(bounds[1].x - (w / 2)),
-      w / Math.abs(bounds[0].x - (w / 2)),
-      h / Math.abs(bounds[1].y - (h / 2)),
-      h / Math.abs(bounds[0].y - (h / 2))) / 2 : 1;
-
-      const cloud = vis.selectAll('text')
-      .data(words, d => d.text);
-      // Entering words
-      cloud.enter()
-           .append('text')
-           .style('font-family', 'Impact')
-           .style('fill', (d, i) => fill(i))
-           .attr('transform', d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-           .attr('text-anchor', 'middle')
-           .attr('font-size', 1)
-           .transition()
-           .text(d => d.text);
-
-      // Entering and existing words
-      cloud.transition()
-           .duration(200)
-           .style('font-size', d => `${d.size}px`)
-           .attr('transform', d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-           .style('fill-opacity', 1);
-      vis.transition().attr('transform', `translate(${[w >> 1, h >> 1]})scale(${scale})`);
-    }
-
-
-    function update() {
-      layout.font('Impact').spiral('archimedean');
-      const fontSize = d3.scale['sqrt']().range([10, 100]);
-      if (words.length) {
-        fontSize.domain([+words[words.length - 1].size || 1, +words[0].size]);
-      }
-      layout.stop().words(words).start();
-    }
-
-    // If window width resizes and wordcloud is not hidden, update the svg
-    // Need to resize on window width only because mobile scrolling resizes window height
-    // May need to refactor to resize on switching tabs
-    window.onresize = event => {
-      if ($(window).width() !== w) {
-        if (!$('#word-cloud').hasClass('hidden')) {
-          update();
-        }
-      }
-    };
-    update();
+                     .on('end', draw)
+                     .start();
   }
 
   render() {

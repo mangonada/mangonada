@@ -1,230 +1,5 @@
 body {
   overflow: hidden;
-  font-family: "Avenir Next", Helvetica, sans-serif;
-}
-
-/**
- * Landing Page Styling
- */
-
-#landing-body {
-  overflow: auto;
-}
-
-#logo {
-  color: white;
-  text-decoration: none;
-}
-
-#logo:hover {
-  text-decoration: none;
-}
-
-.navbar {
-  background-color: rgb(0, 188, 212);
-}
-
-.navbar a:hover {
-  text-decoration: underline;
-}
-
-.navbar-text {
-  padding-top: .75em;
-}
-
-.navbar-link {
-  padding-left: .5em;
-  padding-right: .5em;
-}
-
-.navbar-text .navbar-link {
-  text-decoration: none;
-  color: white;
-}
-
-.navbar-text .navbar-link:hover {
-  color: white;
-}
-
-.landing {
-  background-image: url("../img/landing-main.png");
-  background-size: cover;
-  text-align: center;
-  height: 100%;
-}
-
-.landing h4{
-  padding: .5em;
-}
-
-#landing-form {
-  padding-top: 25%;
-}
-
-#landing-search {
-  /*background:none;*/
-  border: 0;
-  border-radius: .15em;
-  outline: none;
-  border-bottom: .1em solid black;
-  width: 50%;
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.btn {
-  color: white;
-  background-color: rgb(0, 188, 212);
-}
-.btn:hover{
-  background-color: #0059b3;
-}
-
-#how-it-works {
-  background-color: rgb(0, 188, 212);
-  padding: 2.5em;
-  padding-bottom: 3.5em;
-  color: white;
-}
-
-#how-it-works p {
-  padding: 1em;
-  text-align: center;
-}
-
-h5 {
-  padding: .5em;
-  text-align: center;
-  font-family: 24px, "Avenir";
-}
-
-section {
-  width: 100%;
-}
-
-.three-steps {
-  height: 20em;
-  width: 20em;
-  border-radius: 50%;
-  padding: .5em;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  /*box-shadow: 0 2px 2px 0 #888888;*/
-  margin: 0 auto;
-  background-color: white;
-}
-
-#features {
-  padding: 2.5em;
-}
-
-.feature-img {
-  height: 20em;
-  width: 20em;
-  align: center;
-  padding: .5em;
-}
-
-#features p {
-  text-align: center;
-}
-
-p {
-  display: block;
-}
-
-#landing-form {
- margin: 0 auto;
-}
-
-a {
-  cursor: pointer;
-}
-
-footer {
-  background-color: rgb(0, 188, 212);
-  padding: 1em;
-  text-align: center;
-}
-
-footer a {
-  color: white;
-  text-decoration: none;
-}
-footer a:hover{
-  text-decoration: none;
-  color: lightgray;
-}
-
-/* LANDING END */
-
-.disable-anchor {
- pointer-events: none;
- cursor: default;
-}
-
-.disable-anchor img {
-    filter: alpha(opacity=40);
-    opacity : 0.4;
-    margin: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-.github-corner-svg {
-    z-index: 1112;
-    position: fixed;
-    bottom: -40px;
-    right: 0px;
-    border: 0px;
-    border-radius: 50%;
-    transform-origin: center;
-    transform: rotate(-45deg);
-    opacity: 0.4;
-}
-
-.github-corner:hover .octo-arm {
-  animation: octocat-wave 560ms ease-in-out;
-}
-
-@keyframes octocat-wave {
-  0% {
-    transform: rotate(0deg);
-  }
-  20% {
-    transform: rotate(-25deg);
-  }
-  40% {
-    transform: rotate(10deg);
-  }
-  60% {
-   transform: rotate(-25deg);
-  }
-  80% {
-    transform: rotate(10deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
-@media (max-width: 500px) {
-    .github-corner:hover .octo-arm {
-        animation: none;
-    }
-
-    .github-corner .octo-arm {
-        animation: octocat-wave 560ms ease-in-out;
-    }
-}
-
-.fab-fork-github {
-    margin: 0px;
-    top: auto;
-    right: 1em;
-    bottom: 1em;
-    left: auto;
-    position: fixed;
 }
 
 #git {
@@ -235,13 +10,9 @@ footer a:hover{
   z-index: 1;
 }
 
-/*#container { //makes me feel weird...
-  cursor: move;
-}*/
-
 #chart div {
   font: 10px sans-serif;
-  background-color: rgb(0, 188, 212);
+  background-color: steelblue;
   text-align: right;
   padding: 3px;
   margin: 1px;
@@ -259,31 +30,7 @@ footer a:hover{
 
 .selected {
   fill: red;
-  stroke: red;
-  stroke-width: 4;
-/*
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-name: selectCircleTransition;*/
-}
-
-@keyframes selectCircleTransition {
-    0% {
-        fill : "#ff999";
-        -webkit-svg-shadow: 10px 10px 5px #888888;
-        z-index: 1222;
-    }
-    50% {
-        r: 1%;
-        -webkit-svg-shadow: 10px 10px 5px #888888;
-        stroke: "#ff9999";
-        z-index: 1222;
-    }
-    100% {
-        fill : "#ff999";
-        -webkit-svg-shadow: 10px 10px 5px #888888;
-        z-index: 1222;
-    }
+  stroke: brown;
 }
 
 .line {
@@ -336,145 +83,177 @@ pre {
   font-size: 8; /* doesn't work */
 }
 
-/**
-*  For Chart.js
-*/
-
-#charts {
-  margin-top: 20px;
-}
-
-.chart {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.reset {
-  padding-left: 1em;
-  font-size: smaller;
-  color: #ccc;
-}
-
-.background.bar {
-  fill: #ccc;
-}
-
-.foreground.bar {
- fill: rgb(0, 188, 212);
-}
-
-.axis path, .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.axis text {
-  font: 10px sans-serif;
-}
-
-.brush rect.extent {
-  fill: rgb(0, 188, 212);
-  fill-opacity: .125;
-}
-
-.brush .resize path {
-  fill: #eee;
-  stroke: #666;
-}
-
-#commit-list {
-  min-height: 1024px;
-}
-
-#commit-list .date{
-  margin-bottom: .4em;
-}
-#commit-list .day {
-  margin-bottom: .4em;
-}
-
-#commit-list .commit {
-  background: #E0F7FA;
-  margin-bottom: 10px;
-  border: 2px solid white;
-  border-radius: 10px;
-  padding: 5px;
-}
-
-#commit-list .time {
-  color: #0097A7;
-  font-size: .88em;
-}
-
-#commit-list .early {
-  color: green;
-}
-
-aside {
-  font-size: smaller;
-  display:inline-block;
-  text-align: center;
-  margin-bottom: 1em;
-}
-
 
 /**
-* ToolTip
-*/
+ *
+ *  For Chart.js
+ *
+ */
 
-.contrib-content {
-  padding: 5px 5px 5px 5px;
-}
 
-.tooltip {
-	position: absolute;
-	top: 100px;
-	left: 100px;
-  -moz-border-radius:5px;
-  border-radius: 5px;
-  border: solid gray 1px;
-  background: #fff;
-	opacity: .9;
-  color: black;
-	padding: 10px;
-	width: 250px;
-	font-size: 12px;
-  /*padding: 5px 5px 5px 5px;*/
-	z-index: 10;
-}
+ #charts {
+   padding: 10px 0;
+ }
 
-.tooltip .title {
-	font-size: 13px;
-}
+ .chart {
+   display: inline-block;
+   height: 151px;
+   margin-bottom: 20px;
+ }
 
-.tooltip .name {
-  font-weight:bold;
-}
+ .reset {
+   padding-left: 1em;
+   font-size: smaller;
+   color: #ccc;
+ }
 
-.img-url {
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-}
+ .background.bar {
+   fill: #ccc;
+ }
 
-/**
-* Loading Icon
-*/
+ .foreground.bar {
+   fill: steelblue;
+ }
 
-#loading {
-  z-index: 20;
-  position: absolute;
-  top: 20;
-  left: 20;
-  background-color: white;
-  width: 100%;
-  height: 100%;
-}
+ .axis path, .axis line {
+   fill: none;
+   stroke: #000;
+   shape-rendering: crispEdges;
+ }
 
-.loading-gif {
-  align: middle;
-  margin: auto;
-  margin-top: 6em;
-  display: block;
-}
+ .axis text {
+   font: 10px sans-serif;
+ }
+
+ .brush rect.extent {
+   fill: steelblue;
+   fill-opacity: .125;
+ }
+
+ .brush .resize path {
+   fill: #eee;
+   stroke: #666;
+ }
+
+ #hour-chart {
+   width: 450px;
+ }
+
+ #delay-chart {
+   width: 370px;
+ }
+
+ #distance-chart {
+   width: 420px;
+ }
+
+ #date-chart {
+   width: 920px;
+ }
+
+ #flight-list {
+   min-height: 1024px;
+ }
+
+ #flight-list .date,
+ #flight-list .day {
+   margin-bottom: .4em;
+ }
+
+ #flight-list .flight {
+   line-height: 1.5em;
+   background: #eee;
+   width: 1400px;
+   margin-bottom: 1px;
+ }
+
+ #flight-list .time {
+   color: #999;
+ }
+
+ #flight-list .flight div {
+   display: inline-block;
+   width: 100px;
+ }
+ #flight-list div.origin {
+   width: 200px;
+ }
+ #flight-list div.destination,
+ #flight-list div.distance,
+ #flight-list div.delay {
+   width: 500px;
+   padding-right: 10px;
+   text-align: right;
+ }
+
+ #flight-list .early {
+   color: green;
+ }
+
+
+ aside {
+   position: absolute;
+   left: 740px;
+   font-size: smaller;
+   width: 220px;
+ }
+
+ /**
+  *
+  * End of Chart.js Styles
+  *
+  */
+
+  .contrib-content {
+    padding: 5px 5px 5px 5px;
+  }
+
+  .tooltip {
+  	position: absolute;
+  	top: 100px;
+  	left: 100px;
+    -moz-border-radius:5px;
+    border-radius: 5px;
+    border: solid gray 1px;
+    background: #fff;
+  	opacity: .9;
+    color: black;
+  	padding: 10px;
+  	width: 200px;
+  	font-size: 12px;
+    /*padding: 5px 5px 5px 5px;*/
+  	z-index: 10;
+  }
+
+  .tooltip .title {
+  	font-size: 13px;
+  }
+
+  .tooltip .name {
+    font-weight:bold;
+  }
+
+  .img-url {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+  }
+
+/* Loading Icon */
+
+  #loading {
+    z-index: 20;
+    position: absolute;
+    top: 20;
+    left: 20;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loading-gif {
+    align: middle;
+    margin: auto;
+    margin-top: 6em;
+    display: block;
+  }

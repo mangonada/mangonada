@@ -13,14 +13,17 @@ import { bindActionCreators } from 'redux';
 import fetchRepo from '../actions/index';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import Menu from 'material-ui/svg-icons/navigation/menu';
 import AppBar from 'material-ui/AppBar';
 import {orange500, blue500} from 'material-ui/styles/colors';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import SvgIcon from 'material-ui/SvgIcon';
 import NavTabs from '../components/tabs';
 import $ from 'jquery';
+
+import RaisedButton from 'material-ui/RaisedButton'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
@@ -36,14 +39,6 @@ class SearchBar extends Component {
       urlEntered: this.props.urlEntered || 'https://github.com/',
       open: false,
     };
-  }
-
-  componentWillMount() {
-    if (this.props.urlEntered.length > 'https://github.com/'.length) {
-      const newUrlEntered = this.props.urlEntered;
-      this.setState({ urlEntered: newUrlEntered });
-      this.props.fetchRepo(newUrlEntered);
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -104,28 +99,64 @@ class SearchBar extends Component {
   }
 
   render() {
+    const log = () => console.log('aasdfasd');
+    // let myTabs = (
+    //    <Tabs style={{padding: 5}}>
+    //        <Tab icon={<Timeline />} style={{'padding-left': 5, 'padding-right': 5}}/>
+    //        <Tab icon={<Equalizer />} tyle={{'padding-left': 5, 'padding-right': 5}}/>
+    //    </Tabs>
+    // );
+
     return (
       <div>
         <MuiThemeProvider>
           <AppBar
-            title={
-              <a
-                href='http://gitcentral.com/'
-                style={{ 'text-decoration': 'none', color: 'white','font-family': 'Avenir Next'}} >
-                  Git Central
-              </a>
-            }
-            showMenuIconButton={false}
+            title={<span>Git Central</span>}
+            iconElementLeft={<IconButton onClick={this.handleToggle.bind(this)}><Menu /></IconButton>
+           }
           >
           <NavTabs />
             <TextField
-              style = {{width: 400,'font-family': 'Avenir Next'}}
+              style = {{width: 400}}
               onChange={this.onInputChange.bind(this)}
               value={this.state.urlEntered}
               onKeyDown={this.onFormSubmit.bind(this)}
               hintText="Enter repo URL"
             />
           </AppBar>
+        </MuiThemeProvider>
+        <MuiThemeProvider>
+          <Drawer
+            docked={false}
+            width={300}
+            open={this.state.open}
+            onRequestChange={this.handleClose.bind(this)}
+            >
+            <MenuItem onClick={log && this.handleClose.bind(this)}>
+              Search by:
+            </MenuItem>
+            <MenuItem onClick={() => console.log('Author name')}>
+              <TextField
+                floatingLabelText="Author name"
+              />
+            </MenuItem>
+            <MenuItem onClick={() => console.log('Branch')}>
+              <TextField
+                floatingLabelText="Branch"
+              />
+            </MenuItem>
+            <MenuItem onClick={() => console.log('Commit message')}>
+              <TextField
+                floatingLabelText="Commit message"
+              />
+            </MenuItem>
+            <MenuItem onClick={() => console.log('# authors')}>
+              Number of authors: 4
+            </MenuItem>
+            <MenuItem onClick={() => console.log('Total commits')}>
+              Total commits: 492
+            </MenuItem>
+          </Drawer>
         </MuiThemeProvider>
       </div>
     );

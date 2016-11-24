@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 
 module.exports = {
   entry: [
@@ -21,12 +20,4 @@ module.exports = {
       },
     }],
   },
-  plugins: [
-     new webpack.optimize.UglifyJsPlugin({
-       minimize: true,
-       compress: {
-         warnings: false
-       }
-     })
-  ]
 };

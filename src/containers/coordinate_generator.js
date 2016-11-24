@@ -113,7 +113,7 @@ function shiftOverlappingBranches(branchXCoordinates, branchYCoordinates, yOffse
  * on the commit.
  */
 export default function generateCoordinates(commitsArr, commitsObj, branchObj) {
-  const firstCheckForY = window.innerHeight * 3 / 10;
+  const firstCheckForY = window.innerHeight / 2 - 200;
   const yOffset = 40;
   let numCommits = 0;
 

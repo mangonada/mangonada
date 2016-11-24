@@ -1,4 +1,4 @@
-# Git Central
+# ${1:Mangonada}
 A git visualizer app that lets users review their Github repositories as clean, intuitive, metro-style diagrams. We hope to give our users a greater understanding of their Git workflow and ultimately empower them to be confident in future decision-making.
 
 ## Table of Contents
@@ -17,37 +17,94 @@ License
 
 ## File Structure
 
-    .
-    ├── example                
-    ├── img                 
-    ├── server                 # HTML and server files
-    ├── src                    # Front-end (React) files
-    ├── style                  # CSS
-    ├── test                   # Mocha tests
-    ├── .babelrc
-    ├── .eslintrc
-    ├── .gitignore
-    ├── README.md
-    ├── _CONTRIBUTING.md
-    ├── package.json
-    └── webpack.config.js
+/ (root)
+|
+|—src/ (React/Redux)
+  |
+  |--server/
+      |
+      |—api.js
+      |
+      |—index.html
+      |
+      |—models.js
+      |
+      |—server.js
+      |
+      |—service-worker.js
+    |
+    |--actions/
+        |
+        |—index.js
+    |
+    |--components/
+        |
+        |—app.js
+        |
+        |—tabs.js
+    |
+    |--containers/
+        |
+        |—bubble_chart.js
+        |
+        |—chart.js
+        |
+        |—coordinate_generator.js
+        |
+        |—display_helpers.js
+        |
+        |—searchbar.js
+        |
+        |—word_cloud.js
+    |
+    |--reducers/
+        |
+        |—chartD3
+        |
+        |—gitD3
+        |
+        |—gitGraphDemo/ (deprecate)
+
+      |—index.js
+      |
+      |—reducer_currentRepo.js
+
+    |
+    |—index.js
+    |
+    |—routes.js
+    |
+|--style/
+|
+    |
+    |—style.css
+|
+|--test/
+|
+|—_CONTRIBUTING.md
+|
+|—README.md
+|
+|—webpack.config.js
+
 
 ## Setting Up the Dev Environment
-  **Install Dependencies*
+	**Install Dependencies*
 [ ] Navigate to the root directory and run ‘npm install’
 
 ## Starting the App
-  *Please follow the ‘Setting Up the Dev Environment’ instructions before starting the app*
+	*Please follow the ‘Setting Up the Dev Environment’ instructions before starting the app*
 
-- [ ] From the root directory, run ```npm start``` to start the server
-- [ ] Navigate to localhost:8080
+[ ] Open a terminal window and navigate to the root file of the project
+[ ] Run ‘node server/server.js’ to start your server
+[ ] You can now open http://localhost:8080/
 
 ## System Architecture
 
 ![System Architecture](/img/architecture.png)
 
 ## Contributing
-  Please see [_CONTRIBUTING.md](https://github.com/gitcentral/gitcentral/blob/master/_CONTRIBUTING.md).
+	Please see [_CONTRIBUTING.md](https://github.com/mangonada/mangonada/blob/master/_CONTRIBUTING.md).
 
 ## Credits
 Special thanks to Allen Price, Zak Golding, and Nathaniel Schwab.
