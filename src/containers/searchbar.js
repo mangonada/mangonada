@@ -111,7 +111,7 @@ class SearchBar extends Component {
             title={
               <a
                 href='http://gitcentral.com/'
-                style={{ 'text-decoration': 'none', color: 'white','font-family': 'Avenir Next'}} >
+                style={{ 'textDecoration': 'none', color: 'white','fontFamily': 'Avenir Next'}} >
                   Git Central
               </a>
             }
@@ -119,7 +119,7 @@ class SearchBar extends Component {
           >
           <NavTabs />
             <TextField
-              style = {{width: 400,'font-family': 'Avenir Next'}}
+              style = {{width: 400,'fontFamily': 'Avenir Next'}}
               onChange={this.onInputChange.bind(this)}
               value={this.state.urlEntered}
               onKeyDown={this.onFormSubmit.bind(this)}

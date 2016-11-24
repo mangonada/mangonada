@@ -1,6 +1,15 @@
 body {
   overflow: hidden;
   font-family: "Avenir Next", Helvetica, sans-serif;
+  padding-top: 106px;
+}
+
+.navbar-container{
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index: 2;
+  background-color: white;
 }
 
 /**
@@ -477,4 +486,47 @@ aside {
   margin: auto;
   margin-top: 6em;
   display: block;
+}
+
+/**
+ * About Page
+ */
+
+.profile-pic{
+  width:50%;
+  border-radius: 50%;
+  margin-top:1em;
+}
+
+.center-children{
+  text-align: center;
+}
+
+.fa, .color-link{
+  color: rgb(0, 188, 212);
+}
+.social-button-div > a{
+  margin: 0 3px;
+}
+.fa:hover, .color-link:hover{
+  color:black;
+}
+.top-bottom-margin{
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+.bottom-margin{
+  padding-bottom:1em;
+}
+.top-margin{
+  padding-top:1em;
+}
+
+.portfolio-link{
+  cursor:pointer;
+  color:black;
+}
+.portfolio-link:hover{
+  text-decoration: none;
+  color: rgb(0, 188, 212);
 }

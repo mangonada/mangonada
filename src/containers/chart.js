@@ -506,7 +506,7 @@ class CrossfilterChart extends Component {
      * because .form-control is not created yet,
      * and this format is neccessary to select it when it is eventually created
      */
-    $('.navbarContainer').on('input', '.form-control', function(){
+    $('.navbar-container').on('input', '.form-control', function(){
       const term = this.value.toLowerCase().split(' ');
       let needToRender = false;
       word.filterFunction((d) => {

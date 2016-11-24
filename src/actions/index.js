@@ -9,9 +9,9 @@ const ROOT_URL = '/api/repos/';
  * @return {Object} The action
  */
 export default function fetchRepo(gitURL) {
-  const index = gitURL.indexOf('.com/')+5;
+  const index = gitURL.indexOf('.com/') + 5;
   const fullUrl = ROOT_URL + gitURL.slice(index);
-  console.log(fullUrl);
+  // console.log(fullUrl);
   const request = axios.get(fullUrl);
   return {
     type: FETCH_REPO,

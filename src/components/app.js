@@ -10,7 +10,7 @@ import Chart from '../containers/chart';
 import WordCloud from '../containers/word_cloud';
 import BubbleChart from '../containers/bubble_chart';
 
-export default class App extends Component { 
+export default class App extends Component {
   render() {
     return (
       <div>
